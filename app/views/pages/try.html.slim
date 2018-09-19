@@ -1,0 +1,67 @@
+/#btn onclick="printUpload()"
+  |click
+
+#panel.ui.menu
+  .header.item.medium.text
+    | Reducer Type: 
+  #ReducerContext.item.medium.text onClick="setContext()"
+    |Context
+  #ReducerOutputCollector.item.medium.text onClick="setOutputCollector()"
+    |OutputCollector
+  #ReducerExample.item.medium.text onClick="setExample()"
+    |Example
+
+#editor
+
+= javascript_include_tag "/ace-builds/src-noconflict/ace.js"
+javascript:
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/tomorrow");
+  editor.session.setMode("ace/mode/java");
+  $("#ReducerExample").addClass("active");
+
+  var mode = 1;
+
+  var Context_c = "//\n// Complete the reducer\n// Remember to change T1 and T2 to corresponding types\n//\n\n";
+  var OutputCollector_c = "//\n// Complete the reducer\n// Remember to change T1-T4 to corresponding types\n//\n\n";
+  var Context_t = "public void reduce(T1 key, Iterable<T2> values,\n\tContext context) throws IOException,InterruptedException {\n\n}";
+  var OutputCollector_t = "public void reduce(T1 key, Iterator<T2> values,\n\tOutputCollector<T3,T4> oc1, Reporter reporter) throws IOException,InterruptedException {\n\n}";
+
+  var Example_c = "//\n// An example of a communicable reducer\n// Use the templates to test yours\n//\n\n";
+  var Example_t = "public void reduce(Text key, Iterable<IntWritable> values,\n\tContext context) throws IOException, InterruptedException {\n\tint sum = 0;\n\tfor (IntWritable val : values) {\n\t\tsum += val.get();\n\t}\n\tcontext.write(key, sum);\n\n}";
+
+  editor.setValue(Example_c + Example_t);
+
+  function setContext() {
+    $("#ReducerContext").addClass("active");
+    $("#ReducerExample").removeClass("active");
+    $("#ReducerOutputCollector").removeClass("active");
+    if (mode != 1) {
+      editor.setValue(Context_c + Context_t);
+      mode = 1;
+    }
+  }
+
+  function setOutputCollector() {
+    $("#ReducerContext").removeClass("active");
+    $("#ReducerExample").removeClass("active");
+    $("#ReducerOutputCollector").addClass("active");
+    if (mode != 2) {
+      editor.setValue(OutputCollector_c + OutputCollector_t);
+      mode = 2;
+    }
+  }
+
+  function setExample() {
+    $("#ReducerContext").removeClass("active");
+    $("#ReducerOutputCollector").removeClass("active");
+    $("#ReducerExample").addClass("active");
+    if (mode != 3) {
+      editor.setValue(Example_c + Example_t);
+      mode = 3;
+    }
+  }
+
+  function printUpload() {
+    console.log(editor.getValue());
+  }

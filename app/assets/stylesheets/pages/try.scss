@@ -1,0 +1,47 @@
+
+#btn { 
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 20px;
+}
+
+#panel {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+#ReducerContext {
+  cursor: pointer;
+}
+#ReducerOutputCollector {
+  cursor: pointer;
+}
+#ReducerExample {
+  cursor: pointer;
+}
+
+#ReducerContext.active {
+  cursor: default;
+}
+#ReducerOutputCollector.active {
+  cursor: default;
+}
+#ReducerExample.active {
+  cursor: default;
+}
+
+#editor { 
+  font-size: 18px;
+  position: absolute;
+  top: 75px;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+}
