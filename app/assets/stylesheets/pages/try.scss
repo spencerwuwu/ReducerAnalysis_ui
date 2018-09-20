@@ -15,33 +15,81 @@
   left: 0;
   margin-left: 50px;
   margin-right: 50px;
+  width: 90%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-#ReducerContext {
-  cursor: pointer;
-}
-#ReducerOutputCollector {
-  cursor: pointer;
-}
+#ReducerContext, 
+#ReducerOutputCollector,
 #ReducerExample {
   cursor: pointer;
 }
 
-#ReducerContext.active {
-  cursor: default;
-}
+#ReducerContext.active, 
+#ReducerExample.active,
 #ReducerOutputCollector.active {
   cursor: default;
 }
-#ReducerExample.active {
-  cursor: default;
+
+#T1, #T2, #T3, #T4 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 10px;
+  margin-left: 10px;
+  .selection {
+    margin-left: 5px;
+  }
+}
+
+#T1.hide, #T2.hide, #T3.hide, #T4.hide {
+  display: none;
 }
 
 #editor { 
   font-size: 18px;
   position: absolute;
+  bottom: 0;
   top: 75px;
   right: 0;
-  bottom: 0;
   width: 100%;
+  transition: .5s;
+}
+
+#result {
+  position: fixed;
+  top: 125px;
+  bottom: 10%;
+  width: 0%;
+  right: -40px;
+  background-color: #fff;
+  box-shadow: -4px 0 5px rgba(10, 10, 10, 0.2);
+  border-top: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 10;
+  transition: .5s;
+  padding-top: 10px;
+  justify-content: center;
+  align-items: start;
+  padding: 20px;
+  display: flex;
+}
+
+#result.show {
+  width: 50%;
+  right: 0px;
+  .result-menu {
+    display: flex;
+  }
+}
+#result-content {
+  position: absolute;
+  display: inline-block;
+  top: 80px;
+  bottom: 20px;
+  overflow-y: scroll;
+  left: 50px;
+  right: 20px;
 }

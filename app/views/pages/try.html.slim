@@ -1,17 +1,72 @@
 /#btn onclick="printUpload()"
   |click
 
-#panel.ui.menu
-  .header.item.medium.text
-    | Reducer Type: 
-  #ReducerContext.item.medium.text onClick="setContext()"
-    |Context
-  #ReducerOutputCollector.item.medium.text onClick="setOutputCollector()"
-    |OutputCollector
-  #ReducerExample.item.medium.text onClick="setExample()"
-    |Example
+#panel
+  .ui.left.menu
+    .header.item.medium.text
+      | Reducer Type: 
+    #ReducerContext.item onClick="setContext()"
+      |Context
+    #ReducerOutputCollector.item onClick="setOutputCollector()"
+      |OutputCollector
+    #ReducerExample.item onClick="setExample()"
+      |Example
+  span#T1
+    |T1: 
+    select.ui.fluid.dropdown#T1-select name="t1"
+      option value="IntWritable"
+        |IntWritable
+      option value="Text"
+        |Text
+  span#T2
+    |T2: 
+    select.ui.fluid.dropdown#T2-select name="t2"
+      option value="IntWritable"
+        |IntWritable
+      option value="LongWritable"
+        |LongWritable
+      option value="DoubleWritable"
+        |DoubleWritable
+  span#T3.hide
+    |T3: 
+    select.ui.fluid.dropdown#T3-select name="t3"
+      option value="IntWritable"
+        |IntWritable
+      option value="Text"
+        |Text
+  span#T4.hide
+    |T4: 
+    select.ui.fluid.dropdown#T4-select name="t4"
+      option value="IntWritable"
+        |IntWritable
+      option value="LongWritable"
+        |LongWritable
+      option value="DoubleWritable"
+        |DoubleWritable
+
+  button.ui.teal.button onClick="executeTask()"
+    i.play.icon
+    | Run
 
 #editor
+#result
+  .result-menu.ui.fluid.secondary.menu style="align-items: center;"
+    p.large.text
+      |Result:
+    .right.menu
+      button.ui.grey.basic.button onClick="resultHide();"
+        i.chevron.right.icon
+  .ui.segment#result-content
+    .ui.active.inverted.dimmer
+      .ui.text.loader
+        |Fetching Result
+
+
+javascript:
+  $(document).ready(function() {
+    $('.ui.dropdown').dropdown();
+  });
+
 
 = javascript_include_tag "/ace-builds/src-noconflict/ace.js"
 javascript:
@@ -26,9 +81,8 @@ javascript:
   var OutputCollector_c = "//\n// Complete the reducer\n// Remember to change T1-T4 to corresponding types\n//\n\n";
   var Context_t = "public void reduce(T1 key, Iterable<T2> values,\n\tContext context) throws IOException,InterruptedException {\n\n}";
   var OutputCollector_t = "public void reduce(T1 key, Iterator<T2> values,\n\tOutputCollector<T3,T4> oc1, Reporter reporter) throws IOException,InterruptedException {\n\n}";
-
   var Example_c = "//\n// An example of a communicable reducer\n// Use the templates to test yours\n//\n\n";
-  var Example_t = "public void reduce(Text key, Iterable<IntWritable> values,\n\tContext context) throws IOException, InterruptedException {\n\tint sum = 0;\n\tfor (IntWritable val : values) {\n\t\tsum += val.get();\n\t}\n\tcontext.write(key, sum);\n\n}";
+  var Example_t = "public void reduce(IntWritable key, Iterable<IntWritable> values,\n\tContext context) throws IOException, InterruptedException {\n\tint sum = 0;\n\tfor (IntWritable val : values) {\n\t\tsum += val.get();\n\t}\n\tcontext.write(key, sum);\n\n}";
 
   editor.setValue(Example_c + Example_t);
 
@@ -49,6 +103,8 @@ javascript:
     if (mode != 2) {
       editor.setValue(OutputCollector_c + OutputCollector_t);
       mode = 2;
+      $("#T3").removeClass("hide");
+      $("#T4").removeClass("hide");
     }
   }
 
@@ -59,9 +115,47 @@ javascript:
     if (mode != 3) {
       editor.setValue(Example_c + Example_t);
       mode = 3;
+      $("#T3").addClass("hide");
+      $("#T4").addClass("hide");
     }
   }
 
-  function printUpload() {
-    console.log(editor.getValue());
+  function resultHide() {
+      $("#result").removeClass("show");
   }
+
+  function executeTask() {
+    if (!$("#result").hasClass("show")) {
+      $("#result").addClass("show");
+    }
+    $.ajax({
+    type: 'POST',
+    url: "#{create_task_path}",
+    data: { 
+      java: editor.getValue(), 
+      t1: $("#T1-select").val,
+      t2: $("#T2-select").val,
+      t3: $("#T3-select").val,
+      t4: $("#T4-select").val,
+      authenticity_token: "#{form_authenticity_token}"
+    },
+    dataType: 'json',
+    success: function (data) {
+        if (data.compile != null) {
+          $("#result-content").html("<table class='ui red table'><thead><tr><th>Compile Error</th></tr></thead>");
+          $("#result-content").append("<tbody><tr><td>" + filterXSS(data.compile).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody></table>");
+          return;
+        }
+        $("#result-content").html("<table class='ui teal table' id='jimple-table'><thead><tr><th>Extracted Jimple</th></tr></thead></table>");
+        $("#jimple-table").append("<tbody><tr><td>" + filterXSS(data.jimple).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody>");
+
+        $("#result-content").append("<table class='ui teal table' id='execute-table'><thead><tr><th>Testing</th></tr></thead></table>");
+        $("#execute-table").append("<tbody><tr><td>" + filterXSS(data.execute).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody>");
+
+        $("#result-content").append("<table class='ui teal table' id='checker-table'><thead><tr><th>Checker</th></tr></thead></table>");
+        $("#checker-table").append("<tbody><tr><td>" + filterXSS(data.checker).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody>");
+      }
+    });
+  }
+
+

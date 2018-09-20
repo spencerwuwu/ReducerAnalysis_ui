@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  java: MyText
+  compile: MyText
+  jimple: MyText
+  execute: MyText
+  checker: MyText
+  t1: MyString
+  t2: MyString
+  t3: MyString
+  t4: MyString
+
+two:
+  java: MyText
+  compile: MyText
+  jimple: MyText
+  execute: MyText
+  checker: MyText
+  t1: MyString
+  t2: MyString
+  t3: MyString
+  t4: MyString
