@@ -1,5 +1,3 @@
-/#btn onclick="printUpload()"
-  |click
 
 #panel
   .ui.left.menu
@@ -11,50 +9,79 @@
       |OutputCollector
     #ReducerExample.item onClick="setExample()"
       |Example
+
+  .right.menu
+    button.ui.basic.button#type-btn onClick="openType()"
+      i.chevron.down.icon
+      | Types  
+    button.ui.teal.button#run-btn onClick="executeTask()"
+      i.play.icon
+      | Run
+
+#type-menu.deactive
   span#T1
     |T1: 
-    select.ui.fluid.dropdown#T1-select name="t1"
+    select.ui.dropdown#T1-select name="t1"
       option value="IntWritable"
         |IntWritable
+      option value="LongWritable"
+        |LongWritable
       option value="Text"
         |Text
+  br
   span#T2
     |T2: 
-    select.ui.fluid.dropdown#T2-select name="t2"
+    select.ui.dropdown#T2-select name="t2"
+      option value="Integer"
+        |Integer
+      option value="IntWritable"
+        |IntWritable
+      option value="Long"
+        |Long
+      option value="LongWritable"
+        |LongWritable
+      option value="Double"
+        |Double
+      option value="DoubleWritable"
+        |DoubleWritable
+  br
+  span#T3
+    |T3: 
+    select.ui.dropdown#T3-select name="t3"
       option value="IntWritable"
         |IntWritable
       option value="LongWritable"
         |LongWritable
-      option value="DoubleWritable"
-        |DoubleWritable
-  span#T3.hide
-    |T3: 
-    select.ui.fluid.dropdown#T3-select name="t3"
-      option value="IntWritable"
-        |IntWritable
       option value="Text"
         |Text
-  span#T4.hide
+  br
+  span#T4
     |T4: 
-    select.ui.fluid.dropdown#T4-select name="t4"
+    select.ui.dropdown#T4-select name="t4"
+      option value="Integer"
+        |Integer
       option value="IntWritable"
         |IntWritable
+      option value="Long"
+        |Long
       option value="LongWritable"
         |LongWritable
+      option value="Double"
+        |Double
       option value="DoubleWritable"
         |DoubleWritable
-
-  button.ui.teal.button onClick="executeTask()"
-    i.play.icon
-    | Run
+  br
 
 #editor
+  .ui.positive.message
+    p
+      |Refresh if you can't see the editor
 #result
   .result-menu.ui.fluid.secondary.menu style="align-items: center;"
     p.large.text
       |Result:
     .right.menu
-      button.ui.grey.basic.button onClick="resultHide();"
+      button.ui.grey.basic.button#hideBtn onClick="resultHide();"
         i.chevron.right.icon
   .ui.segment#result-content
     .ui.active.inverted.dimmer
@@ -76,15 +103,41 @@ javascript:
   $("#ReducerExample").addClass("active");
 
   var mode = 1;
+  var reducer_type = "Context";
 
-  var Context_c = "//\n// Complete the reducer\n// Remember to change T1 and T2 to corresponding types\n//\n\n";
-  var OutputCollector_c = "//\n// Complete the reducer\n// Remember to change T1-T4 to corresponding types\n//\n\n";
+  var Context_c = "//\n// Complete the reducer\n// Remember to change T1 and T2 to the corresponding types\n//\n\n";
+  var OutputCollector_c = "//\n// Complete the reducer\n// Remember to change T1-T4 to the corresponding types\n//\n\n";
   var Context_t = "public void reduce(T1 key, Iterable<T2> values,\n\tContext context) throws IOException,InterruptedException {\n\n}";
   var OutputCollector_t = "public void reduce(T1 key, Iterator<T2> values,\n\tOutputCollector<T3,T4> oc1, Reporter reporter) throws IOException,InterruptedException {\n\n}";
   var Example_c = "//\n// An example of a communicable reducer\n// Use the templates to test yours\n//\n\n";
-  var Example_t = "public void reduce(IntWritable key, Iterable<IntWritable> values,\n\tContext context) throws IOException, InterruptedException {\n\tint sum = 0;\n\tfor (IntWritable val : values) {\n\t\tsum += val.get();\n\t}\n\tcontext.write(key, sum);\n\n}";
+  var Example_t = "public void reduce(Text key, Iterable<IntWritable> values,\n\tContext context) throws IOException, InterruptedException {\n\tint sum = 0;\n\tfor (IntWritable val : values) {\n\t\tsum += val.get();\n\t}\n\tcontext.write(key, sum);\n\n}";
 
-  editor.setValue(Example_c + Example_t);
+
+  function resultHide() {
+      $("#result").removeClass("show");
+  }
+
+  function openType() {
+    if ($("#type-menu").hasClass("deactive")) {
+      $("#type-menu").removeClass("deactive");
+      $("#type-menu").addClass("active");
+      $("#type-btn").addClass("active");
+    } else {
+      $("#type-menu").removeClass("active");
+      $("#type-menu").addClass("deactive");
+      $("#type-btn").removeClass("active");
+    }
+  }
+
+  function disableRun() {
+    $("#run-btn").addClass("disabled");
+    $("#hideBtn").addClass("hide");
+  }
+
+  function enableRun() {
+    $("#run-btn").removeClass("disabled");
+    $("#hideBtn").removeClass("hide");
+  }
 
   function setContext() {
     $("#ReducerContext").addClass("active");
@@ -93,7 +146,9 @@ javascript:
     if (mode != 1) {
       editor.setValue(Context_c + Context_t);
       mode = 1;
+      reducer_type = "Context";
     }
+    resultHide();
   }
 
   function setOutputCollector() {
@@ -103,9 +158,9 @@ javascript:
     if (mode != 2) {
       editor.setValue(OutputCollector_c + OutputCollector_t);
       mode = 2;
-      $("#T3").removeClass("hide");
-      $("#T4").removeClass("hide");
+      reducer_type = "Collector";
     }
+    resultHide();
   }
 
   function setExample() {
@@ -114,48 +169,63 @@ javascript:
     $("#ReducerExample").addClass("active");
     if (mode != 3) {
       editor.setValue(Example_c + Example_t);
+      $("#T1-select").val("Text");
+      $("#T2-select").val("IntWritable");
+      $("#T3-select").val("Text");
+      $("#T4-select").val("IntWritable");
       mode = 3;
-      $("#T3").addClass("hide");
-      $("#T4").addClass("hide");
+      reducer_type = "Context";
     }
+    resultHide();
   }
 
-  function resultHide() {
-      $("#result").removeClass("show");
+  function format(target) {
+    return target.replace(/\n/g, "</br>").replace(/\t/g, "&#8195;").replace(" ", "&#032;");
   }
 
   function executeTask() {
-    if (!$("#result").hasClass("show")) {
-      $("#result").addClass("show");
-    }
+    if ($("#run-btn").hasClass("disabled")) return;
+
+    resultHide();
+    disableRun();
+    $("#result").addClass("show");
+    $("#result-content").html("<div class='ui active inverted dimmer'><div class='ui text loader'>Fetching Result</div></div>");
     $.ajax({
     type: 'POST',
     url: "#{create_task_path}",
     data: { 
       java: editor.getValue(), 
-      t1: $("#T1-select").val,
-      t2: $("#T2-select").val,
-      t3: $("#T3-select").val,
-      t4: $("#T4-select").val,
+      t1: $("#T1-select").val(),
+      t2: $("#T2-select").val(),
+      t3: $("#T3-select").val(),
+      t4: $("#T4-select").val(),
+      type: reducer_type,
       authenticity_token: "#{form_authenticity_token}"
     },
     dataType: 'json',
     success: function (data) {
-        if (data.compile != null) {
-          $("#result-content").html("<table class='ui red table'><thead><tr><th>Compile Error</th></tr></thead>");
-          $("#result-content").append("<tbody><tr><td>" + filterXSS(data.compile).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody></table>");
+        if (data.compile_error == 1) {
+          $("#result-content").html("<table class='ui red table' id='compile-table'><thead><tr><th>Compile Error</th></tr></thead></table>");
+          $("#compile-table").append("<tbody><tr><td>" + format(filterXSS(data.compile)) + "</td></tr></tbody></table>");
           return;
         }
-        $("#result-content").html("<table class='ui teal table' id='jimple-table'><thead><tr><th>Extracted Jimple</th></tr></thead></table>");
-        $("#jimple-table").append("<tbody><tr><td>" + filterXSS(data.jimple).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody>");
-
-        $("#result-content").append("<table class='ui teal table' id='execute-table'><thead><tr><th>Testing</th></tr></thead></table>");
-        $("#execute-table").append("<tbody><tr><td>" + filterXSS(data.execute).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody>");
+        $("#result-content").html("<table class='ui teal table' id='execute-table'><thead><tr><th>Testing</th></tr></thead></table>");
+        $("#execute-table").append("<tbody><tr><td>" + format(filterXSS(data.execute)) + "</td></tr></tbody>");
 
         $("#result-content").append("<table class='ui teal table' id='checker-table'><thead><tr><th>Checker</th></tr></thead></table>");
-        $("#checker-table").append("<tbody><tr><td>" + filterXSS(data.checker).replace(/\n/g, "</br>").replace(/\t/g, "&#8195;") + "</td></tr></tbody>");
+        $("#checker-table").append("<tbody><tr><td>" + format(filterXSS(data.checker)) + "</td></tr></tbody>");
+
+        $("#result-content").append("<table class='ui teal table' id='jimple-table'><thead><tr><th>Extracted Jimple</th></tr></thead></table>");
+        $("#jimple-table").append("<tbody><tr><td>" + format(filterXSS(data.jimple)) + "</td></tr></tbody>");
+        enableRun();
+      },
+      error: function() {
+        $('#result-content').html("Internal Error");
+        enableRun();
       }
     });
+
   }
+  setExample();
 
 

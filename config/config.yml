@@ -1,5 +1,5 @@
 development:
-    scriptPath: /home/spencerwu/Checker
+    scriptPath: /home/spencerwu/Checker/
 
 production:
-    scriptPath: /home/deploy/Checker
+    scriptPath: /home/deploy/Checker/

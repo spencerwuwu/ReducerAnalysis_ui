@@ -1,12 +1,12 @@
 .ui.fixed.borderless.main.menu#mainMenu
   .left.menu style="padding-left: 50px;"
-    a.header.item herf="/"
+    .header.item
       h2
         |Communicative Checker
     = link_to "Home", root_path, class: "item medium text"
     = link_to "Github", "#", class: "item medium text"
     .ui.simple.dropdown.item.medium.text
-      |Menu
+      |More
       i.dropdown.icon
       .menu
         = link_to "Try it!", try_path, class: "item medium text"
