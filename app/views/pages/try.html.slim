@@ -86,7 +86,7 @@
   .ui.segment#result-content
     .ui.active.inverted.dimmer
       .ui.text.loader
-        |Fetching Result
+        |Fetching the Results
 
 
 javascript:
@@ -98,7 +98,7 @@ javascript:
 = javascript_include_tag "/ace-builds/src-noconflict/ace.js"
 javascript:
   var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/tomorrow");
+  editor.setTheme("ace/theme/chrome");
   editor.session.setMode("ace/mode/java");
   $("#ReducerExample").addClass("active");
 
@@ -189,7 +189,7 @@ javascript:
     resultHide();
     disableRun();
     $("#result").addClass("show");
-    $("#result-content").html("<div class='ui active inverted dimmer'><div class='ui text loader'>Fetching Result</div></div>");
+    $("#result-content").html("<div class='ui active inverted dimmer'><div class='ui text loader'>Fetching the Results</div></div>");
     $.ajax({
     type: 'POST',
     url: "#{create_task_path}",
