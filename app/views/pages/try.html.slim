@@ -204,6 +204,7 @@ javascript:
     },
     dataType: 'json',
     success: function (data) {
+        enableRun();
         if (data.compile_error == 1) {
           $("#result-content").html("<table class='ui red table' id='compile-table'><thead><tr><th>Compile Error</th></tr></thead></table>");
           $("#compile-table").append("<tbody><tr><td>" + format(filterXSS(data.compile)) + "</td></tr></tbody></table>");
