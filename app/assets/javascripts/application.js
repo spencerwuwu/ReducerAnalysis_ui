@@ -13,4 +13,6 @@
 //= require rails-ujs
 //= require jquery
 //= require activestorage
+//= require syntax-highlighter-rails/shCore
+//= require syntax-highlighter-rails/shBrushJava
 //= require_tree .

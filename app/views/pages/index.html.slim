@@ -1,0 +1,109 @@
+#content-container
+  .my-header
+    |Description
+  .my-content
+    p.color-lighter
+      |ReduVer is a tool that verifies the communicative of the reducer in a 
+      a href="http://hadoop.apache.org/" 
+        |Hadoop
+      |&nbsp;
+      a href="https://en.wikipedia.org/wiki/MapReduce" MapReduce
+      |&nbsp;
+      | program. A program is said to be communicable if the order of the inputs will not affect the outputs. We use
+      |&nbsp;
+      a href="https://github.com/Sable/soot" Soot
+      |&nbsp;
+      | to extract the reducer from byte-codes, symbolic execute the program, then verify the result with
+      |&nbsp;
+      a href="https://github.com/Z3Prover/z3" z3
+      |.
+
+    .ui.divider
+
+  .my-header
+    |Our Approach
+  .my-content
+    p.color-lighter
+      |Our goal is to check whether the order of the value-set would affect the result OutputCollector return. 
+    p.color-lighter
+      |In brief, we symbolic execute the reducer program, construct a formula 
+      code F(var, cur)
+      | to be the value of 
+      code var
+      | after the reducer get a value 
+      code cur
+      | from the value-set.  If for every variables 
+      code V
+      | that’s related to OutputCollector, we can not find a solution for 
+      code F(F(V, cur1), cur2) != F(F(V, cur2), cur1)
+      |, the reducer is proved to be communicable.
+
+    p.color-lighter
+      |Below is a communicable reducer program that returns the max value in the value-set.
+    = render(partial: 'partials/indexCode')
+    br
+
+    p.color-lighter
+      |To verify the communicative in a formal approach, we first split the reducer program into 3 sections: 
+    .ui.ordered.list.color-lighter style="padding-left: 10px;"
+      .item 
+        .header
+          |before-loop:
+        .description
+          |Set the initial value of several variables. A program might access its value-set here.
+      .item
+        .header
+          |inner-loop:
+        .description
+          |The program reads one element from its value-set and performs some functions within the loop.
+      .item 
+        .header
+          |after-loop:
+        .description
+          |This section has nothing to with the value-set, so it will not affect the communicative of the program.
+    br
+    p.color-lighter
+      |Then we transform the function body of before-loop and inner-loop into SMT formulas. 
+      |We define each function body as follow:
+    .ui.segment
+      |Let 
+      code cur
+      | be the value we get from the value-set within this function body. 
+      br
+      |For each variable 
+      code var
+      | in the program, we have 
+      code F(var, cur)
+      | to be the value of 
+      code var
+      | after executing the function body.
+    p.color-lighter
+      |In this example we have
+      = render(partial: 'partials/twoCode')
+
+    p.color-lighter
+      |The two formula can be combined by adding a flag beforeLoop
+      = render(partial: 'partials/combineCode')
+
+    p.color-lighter
+      |Transfer into z3 format will look like:
+      = render(partial: 'partials/z3')
+
+    p.color-lighter
+      |From the program we know there is one variable, 
+      code max
+      |, that’s related to the OutputCollector. So we have to verify with z3 whether there is a solution for 
+      code F( F(max, cur1), cur2) !=  F(F(max, cur2), cur1)
+      |. 
+    p.color-lighter
+      |Note that beforeLoop can be arbitrary value in the first function call, but is fixed to negative in the second round. The result of z3 should be unsat and prove the reducer to be communicable.
+
+
+
+  .my-content
+  .my-content
+
+
+
+javascript:
+  SyntaxHighlighter.all()

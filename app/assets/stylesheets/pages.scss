@@ -6,9 +6,11 @@
 
 body {
   background-color: #FFFFFF;
+  font-family: "quicksandregular", sans-serif;
 }
 
 #mainMenu {
+  background-color: #F7F7F7;
 }
 
 .medium.text {
@@ -27,4 +29,43 @@ body {
   right: 0;
   bottom: 0;
   width: 100%;
+  justify-content: center;
+  background-color: #fcfcfc;
+}
+
+#content-container {
+  background-color: #fcfcfc;
+  width: 100%;
+  padding: 30px 10%;
+  display: inline-block;
+}
+
+.my-header {
+  display: flex;
+  width: 100%;
+  text-transform: capitalize;
+  font-variant: small-caps;
+  font-size: 1.7em;
+}
+
+.my-content {
+  margin-top: 20px;
+  display: inline-block;
+  width: 100%;
+  padding-left: 30px;
+  padding-bottom: 30px;
+  font-size: 1.2em;
+}
+
+.color-lighter {
+  color: #555;
+}
+
+code {
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  font-weight: bolder;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
 }

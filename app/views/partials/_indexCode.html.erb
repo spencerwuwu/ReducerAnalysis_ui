@@ -1,0 +1,22 @@
+<script type="syntaxhighlighter" class="brush: java"><![CDATA[
+  
+public void reduce(Text key, Iterator<IntWritable> values, 
+    OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException {
+
+    // before-loop
+    int max = values.next().get();
+    // ~before-loop
+
+    while (values.hasNext()) {
+        // inner-loop
+        int cur = values.next().get();
+        if (cur > max) max = cur;
+        else max = max;
+        // ~inner-loop
+    }
+
+    // after-loop
+    output.collect(key, new IntWritable(max));
+}
+  
+]]></script>
