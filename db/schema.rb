@@ -10,22 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_21_031702) do
+ActiveRecord::Schema.define(version: 2018_09_26_034103) do
 
   create_table "testcases", force: :cascade do |t|
     t.text "java"
-    t.text "compile"
-    t.text "jimple"
-    t.text "execute"
-    t.text "checker"
     t.string "t1"
     t.string "t2"
     t.string "t3"
     t.string "t4"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "type"
+    t.string "r_type"
     t.integer "compile_error"
+    t.text "result"
+    t.text "name"
   end
 
 end

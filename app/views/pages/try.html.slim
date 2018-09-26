@@ -7,7 +7,7 @@
       |Context
     #ReducerOutputCollector.item onClick="setOutputCollector()"
       |OutputCollector
-    #ReducerExample.item onClick="setExample()"
+    /#ReducerExample.item onClick="setExample()"
       |Example
 
   .right.menu
@@ -102,8 +102,8 @@ javascript:
   editor.session.setMode("ace/mode/java");
   $("#ReducerExample").addClass("active");
 
-  var mode = 1;
-  var reducer_type = "Context";
+  var mode = 2;
+  var reducer_type = "Collector";
 
   var Context_c = "//\n// Complete the reducer\n// Remember to change T1 and T2 to the corresponding types\n//\n\n";
   var OutputCollector_c = "//\n// Complete the reducer\n// Remember to change T1-T4 to the corresponding types\n//\n\n";
@@ -112,6 +112,19 @@ javascript:
   var Example_c = "//\n// An example of a communicable reducer\n// Use the templates to test yours\n//\n\n";
   var Example_t = "public void reduce(Text key, Iterable<IntWritable> values,\n\tContext context) throws IOException, InterruptedException {\n\tint sum = 0;\n\tfor (IntWritable val : values) {\n\t\tsum += val.get();\n\t}\n\tcontext.write(key, sum);\n\n}";
 
+  String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+  };
+
+
+  function format(target) {
+    return target.replace(/\n/g, "</br>").replace(/\t/g, "&#8195;").replace(" ", "&#032;");
+  }
+
+  function r_format(target) {
+    return target.replaceAll("&amp;", "&").replaceAll("&lt;", "<").replaceAll("&gt", ">");
+  }
 
   function resultHide() {
       $("#result").removeClass("show");
@@ -179,8 +192,25 @@ javascript:
     resultHide();
   }
 
-  function format(target) {
-    return target.replace(/\n/g, "</br>").replace(/\t/g, "&#8195;").replace(" ", "&#032;");
+  function setInitial() {
+    $("#ReducerContext").removeClass("active");
+    $("#ReducerOutputCollector").removeClass("active");
+    $("#ReducerExample").addClass("active");
+    if (mode != 3) {
+      editor.setValue(r_format("#{@java}"));
+      $("#T1-select").val("#{@benchmark.t1}");
+      $("#T2-select").val("#{@benchmark.t2}");
+      $("#T3-select").val("#{@benchmark.t3}");
+      $("#T4-select").val("#{@benchmark.t4}");
+      if ("#{@benchmark.r_type}" == "Context") {
+        mode = 1;
+        reducer_type = "Context";
+      } else {
+        mode = 2;
+        reducer_type = "Collector";
+      }
+    }
+    resultHide();
   }
 
   function executeTask() {
@@ -227,6 +257,7 @@ javascript:
     });
 
   }
-  setExample();
+  //setExample();
+  setInitial();
 
 

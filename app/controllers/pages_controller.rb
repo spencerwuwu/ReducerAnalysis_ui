@@ -4,6 +4,15 @@ class PagesController < ApplicationController
   end
 
   def try
+    if (params.has_key?(:id))
+      @benchmark = Testcase.find(params[:id])
+    else
+      @benchmark = Testcase.find(1)
+    end
+    @java = @benchmark.java.gsub "\n", "\\n"
+    @java.gsub "\t", "\\t"
+    @java.gsub "\"", "\\\""
+    @java.gsub "\'", "\\\'"
   end
 
   def create_task
@@ -23,6 +32,7 @@ class PagesController < ApplicationController
   end
 
   def benchmarks
+    @benchmarks = Testcase.all()
   end
 
   def task_params

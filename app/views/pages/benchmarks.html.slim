@@ -1,6 +1,8 @@
 #content-container
+  = render(partial: "partials/scrollTop")
+
   .my-header
-    |Benchmarks
+    |Downloads
 
   .my-content
     .ui.divided.relaxed.list
@@ -18,3 +20,39 @@
             |runnable_number.zip
           .description
             |Uploaded on Sep25, 2018
+
+  .my-header
+    |Experiments
+  .my-content
+    p.color-lighter
+      |Total: 98, 
+      br
+      |Proved to be communicable: 93
+      br
+      |Cannot prove but found counter example: 3
+      br
+      |Cannot determine: 2
+    table.ui.celled.unstackable.striped.table
+      thead
+        tr
+          th
+            |File 
+            span.color-lighter
+              |(Click to test)
+          th
+            |Result
+      tbody
+        - @benchmarks.each do |benchmark|
+          tr
+            td.collapsing
+              = link_to try_path(benchmark.id) do
+                i.file.outline.icon
+                |#{benchmark.name}
+            td
+              |#{benchmark.result}
+          
+
+
+  .my-content
+  .my-content
+  .my-content

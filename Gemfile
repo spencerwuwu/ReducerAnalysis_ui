@@ -13,6 +13,8 @@ gem 'semantic-ui-sass'
 gem 'jquery-rails'
 gem 'jquery-turbolinks'
 gem 'syntax-highlighter-rails'
+gem 'administrate', github: 'thoughtbot/administrate'
+gem 'database_cleaner'
 
 gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
