@@ -98,6 +98,28 @@
     p.color-lighter
       |Note that beforeLoop can be arbitrary value in the first function call, but is fixed to negative in the second round. The result of z3 should be unsat and prove the reducer to be communicable.
 
+    .ui.divider
+
+  .my-header
+    |Performance
+  .my-content
+    p.color-lighter
+      |In 
+      = link_to "Benchmarks", benchmarks_path
+      |&nbsp;
+      |we provided 98 reducer programs collected from Github. These programs do not contain complicate object structures and basically only deal with number. 
+      |ReduVer can prove 93/98 of them to be communicable. For more details please refer to the 
+      = link_to "Benchmarks", benchmarks_path
+      |&nbsp;
+      |page.
+    p.color-lighter
+      |The next goal is to support string operations and object types, inline function calls.
+
+    .ui.divider
+
+  .my-header
+    |People
+
 
 
   .my-content
