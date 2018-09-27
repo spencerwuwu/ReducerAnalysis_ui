@@ -27,7 +27,9 @@ set :puma_init_active_record, true  # Change to false when not using ActiveRecor
 namespace :deploy do
   desc "reload the database with seed data"
   task :seed do
-    run "cd #{current_path}; bundle exec rake db:seed RAILS_ENV=#{fetch(:stage)}"
+    on roles(:app) do
+      execute "cd #{current_path}; rake db:seed RAILS_ENV=#{fetch(:stage)}"
+    end
   end
 end
 
@@ -49,7 +51,7 @@ end
 # set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "config/database.yml"
+append :linked_files, "db/production.sqlite3"
 
 # Default value for linked_dirs is []
 append :linked_dirs, "log", "tmp/cache"
