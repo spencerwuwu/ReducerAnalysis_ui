@@ -2,11 +2,11 @@
 #panel
   .ui.left.menu
     .header.item.medium.text
-      | Reducer Type: 
-    #ReducerContext.item onClick="setContext()"
-      |Context
+      |Reducer Param: 
     #ReducerOutputCollector.item onClick="setOutputCollector()"
       |OutputCollector
+    #ReducerContext.item onClick="setContext()"
+      |Context
     /#ReducerExample.item onClick="setExample()"
       |Example
 
@@ -86,7 +86,7 @@
   .ui.segment#result-content
     .ui.active.inverted.dimmer
       .ui.text.loader
-        |Fetching the Results
+        |Fetching the Result
 
 
 javascript:
@@ -123,7 +123,7 @@ javascript:
   }
 
   function r_format(target) {
-    return target.replaceAll("&amp;", "&").replaceAll("&lt;", "<").replaceAll("&gt", ">");
+    return target.replaceAll("&amp;", "&").replaceAll("&lt;", "<").replaceAll("&gt;", ">");
   }
 
   function resultHide() {
@@ -219,7 +219,9 @@ javascript:
     resultHide();
     disableRun();
     $("#result").addClass("show");
-    $("#result-content").html("<div class='ui active inverted dimmer'><div class='ui text loader'>Fetching the Results</div></div>");
+    $("#result-content").html("<div class='ui active inverted dimmer'><div class='ui text loader'>Fetching the Result</div></div>");
+    if ($("#T3-select").val() == null || $("#T3-select").val() == "") $("#T3-select").val($("#T1-select").val());
+    if ($("#T4-select").val() == null || $("#T4-select").val() == "") $("#T4-select").val($("#T2-select").val());
     $.ajax({
     type: 'POST',
     url: "#{create_task_path}",
@@ -229,25 +231,24 @@ javascript:
       t2: $("#T2-select").val(),
       t3: $("#T3-select").val(),
       t4: $("#T4-select").val(),
-      type: reducer_type,
+      r_type: reducer_type,
       authenticity_token: "#{form_authenticity_token}"
     },
     dataType: 'json',
     success: function (data) {
         enableRun();
-        if (data.compile_error == 1) {
+        if (data.result.includes("Compile Error")) {
           $("#result-content").html("<table class='ui red table' id='compile-table'><thead><tr><th>Compile Error</th></tr></thead></table>");
-          $("#compile-table").append("<tbody><tr><td>" + format(filterXSS(data.compile)) + "</td></tr></tbody></table>");
+          $("#compile-table").append("<tbody><tr><td>" + format(filterXSS(data.result)) + "</td></tr></tbody></table>");
+          return;
+        } else if (data.result.includes("Type Error")) {
+          $("#result-content").html("<table class='ui red table' id='compile-table'><thead><tr><th>Type Error</th></tr></thead></table>");
+          $("#compile-table").append("<tbody><tr><td>" + format(filterXSS(data.result)) + "</td></tr></tbody></table>");
           return;
         }
-        $("#result-content").html("<table class='ui teal table' id='execute-table'><thead><tr><th>Testing</th></tr></thead></table>");
-        $("#execute-table").append("<tbody><tr><td>" + format(filterXSS(data.execute)) + "</td></tr></tbody>");
+        $("#result-content").html("<table class='ui teal table' id='execute-table'><thead><tr><th>Result</th></tr></thead></table>");
+        $("#execute-table").append("<tbody><tr><td>" + format(filterXSS(data.result)) + "</td></tr></tbody>");
 
-        $("#result-content").append("<table class='ui teal table' id='checker-table'><thead><tr><th>Checker</th></tr></thead></table>");
-        $("#checker-table").append("<tbody><tr><td>" + format(filterXSS(data.checker)) + "</td></tr></tbody>");
-
-        $("#result-content").append("<table class='ui teal table' id='jimple-table'><thead><tr><th>Extracted Jimple</th></tr></thead></table>");
-        $("#jimple-table").append("<tbody><tr><td>" + format(filterXSS(data.jimple)) + "</td></tr></tbody>");
         enableRun();
       },
       error: function() {

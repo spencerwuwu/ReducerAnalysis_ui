@@ -22,8 +22,7 @@ class PagesController < ApplicationController
     @task.t2 = params[:t2]
     @task.t3 = params[:t3]
     @task.t4 = params[:t4]
-    @task.type = params[:type]
-    @task.compile_error = 0
+    @task.r_type = params[:r_type]
     respond_to do |format|
       if @task.handle_task
         format.json { render json: @task }

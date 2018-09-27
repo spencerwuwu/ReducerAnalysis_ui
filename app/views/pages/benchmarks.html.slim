@@ -45,11 +45,16 @@
         - @benchmarks.each do |benchmark|
           tr
             td.collapsing
-              = link_to try_path(benchmark.id) do
+              = link_to try_path(benchmark.id), target: :_blank do
                 i.file.outline.icon
                 |#{benchmark.name}
-            td
-              |#{benchmark.result}
+            - if benchmark.result.include? "Cannot find"
+              td.error
+                i.attention.icon
+                |#{benchmark.result}
+            - else
+              td.positive
+                |#{benchmark.result}
           
 
 
