@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_26_034103) do
+ActiveRecord::Schema.define(version: 2018_09_28_081634) do
 
   create_table "testcases", force: :cascade do |t|
     t.text "java"
@@ -21,9 +21,10 @@ ActiveRecord::Schema.define(version: 2018_09_26_034103) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "r_type"
-    t.integer "compile_error"
     t.text "result"
     t.text "name"
+    t.string "category"
+    t.string "subcategory"
   end
 
 end

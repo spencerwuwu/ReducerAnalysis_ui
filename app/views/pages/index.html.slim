@@ -5,13 +5,13 @@
     |Description
   .my-content
     p.color-lighter
-      |J-ReCoVer is a tool that verifies the communicative of the reducer in a 
+      |J-ReCoVer is a tool that verifies the commutativity of the reducer in a 
       a href="http://hadoop.apache.org/" 
         |Hadoop
       |&nbsp;
       a href="https://en.wikipedia.org/wiki/MapReduce" MapReduce
       |&nbsp;
-      | program. A program is said to be communicable if the order of the inputs will not affect the outputs. We use
+      | program. A program is said to be commutable if the order of the inputs will not affect the outputs. We use
       |&nbsp;
       a href="https://github.com/Sable/soot" Soot
       |&nbsp;
@@ -38,15 +38,15 @@
       code V
       | that’s related to OutputCollector, we can not find a solution for 
       code F(F(V, cur1), cur2) != F(F(V, cur2), cur1)
-      |, the reducer is proved to be communicable.
+      |, the reducer is proved to be commutable.
 
     p.color-lighter
-      |Below is a communicable reducer program that returns the max value in the value-set.
+      |Below is a commutable reducer program that returns the max value in the value-set.
     = render(partial: 'partials/indexCode')
     br
 
     p.color-lighter
-      |To verify the communicative in a formal approach, we first split the reducer program into 3 sections: 
+      |To verify the commutativity in a formal approach, we first split the reducer program into 3 sections: 
     .ui.ordered.list.color-lighter style="padding-left: 10px;"
       .item 
         .header
@@ -62,7 +62,7 @@
         .header
           |after-loop:
         .description
-          |This section has nothing to with the value-set, so it will not affect the communicative of the program.
+          |This section has nothing to with the value-set, so it will not affect the commutativity of the program.
     br
     p.color-lighter
       |Then we transform the function body of before-loop and inner-loop into SMT formulas. 
@@ -98,7 +98,7 @@
       code F( F(max, cur1), cur2) !=  F(F(max, cur2), cur1)
       |. 
     p.color-lighter
-      |Note that beforeLoop can be arbitrary value in the first function call, but is fixed to negative in the second round. The result of z3 should be unsat and prove the reducer to be communicable.
+      |Note that beforeLoop can be arbitrary value in the first function call, but is fixed to negative in the second round. The result of z3 should be unsat and prove the reducer to be commutable.
 
     .ui.divider
 
@@ -110,7 +110,7 @@
       = link_to "Benchmarks", benchmarks_path
       |&nbsp;
       |we provided 98 reducer programs collected from Github. These programs do not contain complicate object structures and basically only deal with number. 
-      |J-ReCoVer can prove 93/98 of them to be communicable. For more details please refer to the 
+      |J-ReCoVer can prove 93/98 of them to be commutable. For more details please refer to the 
       = link_to "Benchmarks", benchmarks_path
       |&nbsp;
       |page.
