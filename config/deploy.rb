@@ -25,12 +25,14 @@ set :puma_worker_timeout, nil
 set :puma_init_active_record, true  # Change to false when not using ActiveRecord
 
 namespace :deploy do
-  desc "reload the database with seed data"
-  task :seed do
-    on roles(:app) do
-      execute "cd #{current_path}; rake db:seed RAILS_ENV=#{fetch(:stage)}"
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      invoke 'puma:restart'
     end
   end
+
+  after  :finishing,    :restart
 end
 
 
