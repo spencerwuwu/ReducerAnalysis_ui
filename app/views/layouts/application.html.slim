@@ -3,12 +3,15 @@ html
   head
     title J-ReCoVer
 
+    = render(partial: "partials/ga")
+
     = csrf_meta_tags
     meta name="viewport" content="width=device-width, initial-scale=1.0"
     meta name="keywords" content="J-ReCoVer, jrecover, symbolic execution, java, hadoop, commutable, commutative, commutativity, verifier, Wei-Cheng Wu"
     meta property="og:url" content="http://jrecover.iis.sinica.edu.tw/"
 
-    meta property="og:image" content="/iis.jpg"
+    meta property="og:image" content="http://jrecover.iis.sinica.edu.tw/iis.jpg"
+    meta property="og:type" content="website"
     meta property="og:title" content="J-ReCoVer"
     meta property="og:description" content="A commutativity verification tool for MapReduce programs."
 
