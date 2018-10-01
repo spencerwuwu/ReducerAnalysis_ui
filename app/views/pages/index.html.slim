@@ -5,17 +5,23 @@
     |Description
   .my-content
     p.color-lighter
-      |J-ReCoVer is a tool that verifies the commutativity of the reducer in a 
-      a href="http://hadoop.apache.org/" 
-        |Hadoop
+      |J-ReCoVer, short for "Java Reducer Commutative Verifier", is a verification tool for
       |&nbsp;
       a href="https://en.wikipedia.org/wiki/MapReduce" MapReduce
       |&nbsp;
-      | program. A program is said to be commutable if the order of the inputs will not affect the outputs. We use
+      |program written with 
+      a href="http://hadoop.apache.org/" Hadoop
+      |. A program is said to be 
+      a href="https://en.wikipedia.org/wiki/Commutative_property"
+        |commutable 
       |&nbsp;
-      a href="https://github.com/Sable/soot" Soot
+      |if the order of the inputs will not affect the outputs. 
+    p.color-lighter
+      |J-ReCoVer symbolic executes the function body of a reducer and tries to prove the commutativity. We use
       |&nbsp;
-      | to extract the reducer from byte-codes, symbolic execute the program, then verify the result with
+      a href="https://github.com/Sable/soot" soot
+      |&nbsp;
+      | to extract the reducer from executable byte-codes, and verify the result with
       |&nbsp;
       a href="https://github.com/Z3Prover/z3" z3
       |.
@@ -26,22 +32,10 @@
     |Our Approach
   .my-content
     p.color-lighter
-      |Our goal is to check whether the order of the value-set would affect the result OutputCollector return. 
-    p.color-lighter
-      |In brief, we symbolic execute the reducer program, construct a formula 
-      code F(var, cur)
-      | to be the value of 
-      code var
-      | after the reducer get a value 
-      code cur
-      | from the value-set.  If for every variables 
-      code V
-      | that’s related to OutputCollector, we can not find a solution for 
-      code F(F(V, cur1), cur2) != F(F(V, cur2), cur1)
-      |, the reducer is proved to be commutable.
+      |Our goal is to check whether the order of the value-set will affect the result OutputCollector/Context returns. 
 
     p.color-lighter
-      |Below is a commutable reducer program that returns the max value in the value-set.
+      |Below is a commutable reducer program that returns the max value within the value-set.
     = render(partial: 'partials/indexCode')
     br
 
@@ -62,15 +56,15 @@
         .header
           |after-loop:
         .description
-          |This section has nothing to with the value-set, so it will not affect the commutativity of the program.
+          |This section does not take inputs from the value-set. It will not affect the commutativity of the program.
     br
     p.color-lighter
       |Then we transform the function body of before-loop and inner-loop into SMT formulas. 
-      |We define each function body as follow:
+      |We define each function body:
     .ui.segment
       |Let 
       code cur
-      | be the value we get from the value-set within this function body. 
+      | be the input we get from the value-set in this function body. 
       br
       |For each variable 
       code var
@@ -79,26 +73,60 @@
       | to be the value of 
       code var
       | after executing the function body.
+
+    br
     p.color-lighter
       |In this example we have
       = render(partial: 'partials/twoCode')
 
     p.color-lighter
-      |The two formula can be combined by adding a flag beforeLoop
+      |The two formula can be joined by adding a flag 
+      code
+        |beforeLoop
       = render(partial: 'partials/combineCode')
 
     p.color-lighter
-      |Transfer into z3 format will look like:
+      |Transfer this into a z3 formula:
       = render(partial: 'partials/z3')
 
+    br
     p.color-lighter
-      |From the program we know there is one variable, 
+      |By observing the program we know that there is only one variable 
       code max
-      |, that’s related to the OutputCollector. So we have to verify with z3 whether there is a solution for 
-      code F( F(max, cur1), cur2) !=  F(F(max, cur2), cur1)
-      |. 
+      |&nbsp;
+      | that’s related to the OutputCollector. 
+      |Note that beforeLoop can be arbitrary value in the first round of the function body, and is fixed to negative in the second round.
     p.color-lighter
-      |Note that beforeLoop can be arbitrary value in the first function call, but is fixed to negative in the second round. The result of z3 should be unsat and prove the reducer to be commutable.
+      |To prove commutativity we use z3 to check whether there exists a solution for 
+      code F(F(max, cur1), cur2) !=  F(F(max, cur2), cur1)
+      |. 
+      br
+      |If we can find a solution, it means that there exists an order of input where the exchange of two elements 
+      |will result in different outputs. 
+      br
+      |On the contrary, if there exists no solution, the function 
+      code F(max, cur)
+      |&nbsp;
+      |is proved to be commutable.
+
+    p.color-lighter
+      |In this example, z3 returns unsat and proves the program to be commutable.
+
+
+    .ui.divider
+
+
+  .my-header
+    |People
+  .my-content
+    .ui.large.relaxed.list
+      - @people.each do |person|
+        .item
+          = image_tag "people/#{person.img_name}", class: "ui avatar image"
+          .content
+            = link_to "#{person.name}", "#{person.url}", class: "headder"
+            .description.color-lighter
+              |#{person.description}
 
     .ui.divider
 
@@ -109,18 +137,32 @@
       |In 
       = link_to "Benchmarks", benchmarks_path
       |&nbsp;
-      |we provided 98 reducer programs collected from Github. These programs do not contain complicate object structures and basically only deal with number. 
-      |J-ReCoVer can prove 93/98 of them to be commutable. For more details please refer to the 
+      |we provided 98 reducer programs collected from Github. These programs do not contain complicate object structures and basically only cope with number.  For more details please refer to the 
       = link_to "Benchmarks", benchmarks_path
       |&nbsp;
       |page.
     p.color-lighter
       |The next goal is to support string operations, object types, and inline function calls.
+    p.color-lighter
+      |We will also be migrating to
+      |&nbsp;
+      a href="https://flink.apache.org/"
+        |Apache Flink
+      |, for that it is more commonly used in industry nowadays.
 
     .ui.divider
 
   .my-header
-    |People
+    |Contact
+  .my-content
+    .ui.large.relaxed.list
+      - @contact.each do |person|
+        .item
+          = image_tag "people/#{person.img_name}", class: "ui avatar image"
+          .content
+            = link_to "#{person.name}", "#{person.url}", class: "headder"
+            .description.color-lighter
+              |#{person.email}
 
 
 

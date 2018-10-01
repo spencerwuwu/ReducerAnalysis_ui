@@ -1,6 +1,9 @@
 class PagesController < ApplicationController
   before_action :task_params
+
   def index
+    @people = Person.all()
+    @contact = Person.where(:is_contact => true)
   end
 
   def try
@@ -10,7 +13,7 @@ class PagesController < ApplicationController
       @benchmark = Testcase.find(1)
     end
     @java = @benchmark.java.gsub "\n", "\\n"
-    @java.gsub "\t", "\\t"
+    @java.gsub "\"\t", "\\t"
     @java.gsub "\"", "\\\""
     @java.gsub "\'", "\\\'"
   end
@@ -31,7 +34,19 @@ class PagesController < ApplicationController
   end
 
   def benchmarks
+    @githubs = Testcase.where(:source => "Github")
+
+    @selfs = Testcase.where(:source => "Self")
+  end
+
+  def get_print
     @benchmarks = Testcase.all()
+    @benchmarks.each do |b|
+      puts "b = Testcase.find(#{b.id})"
+      puts "b.comment = \"#{b.comment}\""
+      puts "b.source = \"#{b.source}\""
+      puts "b.save"
+    end
   end
 
   def task_params
