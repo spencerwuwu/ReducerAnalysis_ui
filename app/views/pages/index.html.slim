@@ -25,6 +25,11 @@
       |&nbsp;
       a href="https://github.com/Z3Prover/z3" z3
       |.
+    p.color-lighter
+      |Currently J-ReCoVer supports only operations on numbers, and no loop or array is allowed except 
+      code
+        |while (iter.hasNext()) {}
+      |.
 
     .ui.divider
 
@@ -119,7 +124,7 @@
   .my-header
     |People
   .my-content
-    .ui.large.relaxed.list
+    .ui.relaxed.list
       - @people.each do |person|
         .item
           = image_tag "people/#{person.img_name}", class: "ui avatar image"
@@ -155,7 +160,7 @@
   .my-header
     |Contact
   .my-content
-    .ui.large.relaxed.list
+    .ui.relaxed.list
       - @contact.each do |person|
         .item
           = image_tag "people/#{person.img_name}", class: "ui avatar image"

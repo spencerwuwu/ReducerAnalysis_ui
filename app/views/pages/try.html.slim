@@ -190,6 +190,12 @@ javascript:
   function disableRun() {
     $("#run-btn").addClass("disabled");
     $("#hideBtn").addClass("hide");
+    if (!$("#type-menu").hasClass("deactive")) {
+      $("#type-menu").removeClass("active");
+      $("#type-menu").addClass("deactive");
+      $("#type-btn").removeClass("active");
+      $("#type-btn").addClass("teal");
+    }
   }
 
   function enableRun() {
