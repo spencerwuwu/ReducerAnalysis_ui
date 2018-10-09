@@ -124,16 +124,33 @@
   .my-header
     |People
   .my-content
-    .ui.relaxed.list
-      - @people.each do |person|
+    .my-sub-header
+      |Current
+    .ui.middle.aligned.divided.relaxed.list
+      - @current.each do |person|
         .item
           = image_tag "people/#{person.img_name}", class: "ui avatar image"
-          .content
-            = link_to "#{person.name}", "#{person.url}", class: "headder"
-            .description.color-lighter
+          .content.color-lighter
+            - if person.url.length > 0 
+              = link_to "#{person.name}", "#{person.url}", class: "headder"
+            - else
+              |#{person.name}
+    br
+    .my-sub-header
+      |Former
+    .ui.middle.aligned.divided.relaxed.list
+      - @former.each do |person|
+        .item
+          = image_tag "people/#{person.img_name}", class: "ui avatar image"
+          .content.color-lighter
+            - if person.url.length > 0 
+              = link_to "#{person.name}", "#{person.url}", class: "headder"
+            - else
+              |#{person.name}
+            /.description.color-lighter
               |#{person.description}
 
-    .ui.divider
+  .my-content
 
   .my-header
     |Performance
@@ -160,11 +177,11 @@
   .my-header
     |Contact
   .my-content
-    .ui.relaxed.list
+    .ui.middle.aligned.divided.relaxed.list
       - @contact.each do |person|
         .item
           = image_tag "people/#{person.img_name}", class: "ui avatar image"
-          .content
+          .content.color-lighter
             = link_to "#{person.name}", "#{person.url}", class: "headder"
             .description.color-lighter
               |#{person.email}

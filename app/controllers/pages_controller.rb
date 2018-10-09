@@ -2,7 +2,8 @@ class PagesController < ApplicationController
   before_action :task_params
 
   def index
-    @people = Person.all()
+    @current = Person.where(:is_current => true)
+    @former = Person.where(:is_current => false) 
     @contact = Person.where(:is_contact => true)
   end
 
@@ -29,6 +30,8 @@ class PagesController < ApplicationController
     respond_to do |format|
       if @task.handle_task
         format.json { render json: @task }
+      else
+        format.json { head :no_content }
       end
     end
   end

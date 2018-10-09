@@ -6,7 +6,7 @@ class Testcase < ApplicationRecord
     File.open(path + "reducer.java", 'w') { |file| file.write(self.java) }
     cmd = path + "j-ReCoVer " + self.t1 + " " + self.t2 + " " + self.t3 + " " + self.t4 + " " + self.r_type
 
-    self.result = %x{ #{cmd} }
+    self.result = %x{ #{cmd + " 2>&1"} }
     if self.result.include? "Usage: ./j-ReCoVer"
       self.result = "Type Error"
     end
