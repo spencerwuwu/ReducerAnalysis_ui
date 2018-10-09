@@ -132,7 +132,7 @@
           = image_tag "people/#{person.img_name}", class: "ui avatar image"
           .content.color-lighter
             - if person.url.length > 0 
-              = link_to "#{person.name}", "#{person.url}", class: "headder"
+              = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
             - else
               |#{person.name}
     br
@@ -144,7 +144,7 @@
           = image_tag "people/#{person.img_name}", class: "ui avatar image"
           .content.color-lighter
             - if person.url.length > 0 
-              = link_to "#{person.name}", "#{person.url}", class: "headder"
+              = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
             - else
               |#{person.name}
             /.description.color-lighter
@@ -182,7 +182,7 @@
         .item
           = image_tag "people/#{person.img_name}", class: "ui avatar image"
           .content.color-lighter
-            = link_to "#{person.name}", "#{person.url}", class: "headder"
+            = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
             .description.color-lighter
               |#{person.email}
 
