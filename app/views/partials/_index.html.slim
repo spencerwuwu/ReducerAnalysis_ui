@@ -1,0 +1,198 @@
+#content-container
+  = render(partial: "partials/scrollTop")
+
+  .my-header
+    |Description
+  .my-content
+    p.color-lighter
+      |J-ReCoVer, short for "Java Reducer Commutative Verifier", is a verification tool for
+      |&nbsp;
+      a href="https://en.wikipedia.org/wiki/MapReduce" MapReduce
+      |&nbsp;
+      |program written with 
+      a href="http://hadoop.apache.org/" Hadoop
+      |. A program is said to be 
+      a href="https://en.wikipedia.org/wiki/Commutative_property"
+        |commutative
+      |&nbsp;
+      |if the order of the inputs will not affect the outputs. 
+    p.color-lighter
+      |J-ReCoVer symbolic executes the function body of a reducer and tries to prove the commutativity. We use
+      |&nbsp;
+      a href="https://github.com/Sable/soot" soot
+      |&nbsp;
+      | to extract the reducer from executable byte-codes, and verify the result with
+      |&nbsp;
+      a href="https://github.com/Z3Prover/z3" z3
+      |.
+    p.color-lighter
+      |Currently J-ReCoVer supports only operations on numbers, and no loop or array is allowed except 
+      code
+        |while (iter.hasNext()) {}
+      |.
+
+    .ui.divider
+
+  .my-header
+    |Our Approach
+  .my-content
+    p.color-lighter
+      |Our goal is to check whether the order of the value-set will affect the result OutputCollector/Context returns. 
+
+    p.color-lighter
+      |Below is a typical reducer program that returns the max value within the value-set. It is commutative.
+    = render(partial: 'partials/indexCode')
+    br
+
+    p.color-lighter
+      |To verify the commutativity in a formal approach, we first split the reducer program into 3 sections: 
+    .ui.ordered.list.color-lighter style="padding-left: 10px;"
+      .item 
+        .header
+          |before-loop:
+        .description
+          |Set the initial value of several variables. A program might access its value-set here.
+      .item
+        .header
+          |inner-loop:
+        .description
+          |The program reads one element from its value-set and performs some functions within the loop.
+      .item 
+        .header
+          |after-loop:
+        .description
+          |This section does not take inputs from the value-set. It will not affect the commutativity of the program.
+    br
+    p.color-lighter
+      |Then we transform the function body of before-loop and inner-loop into SMT formulas. 
+      |We define each function body:
+    .ui.segment
+      |Let 
+      code cur
+      | be the input we get from the value-set in this function body. 
+      br
+      |For each variable 
+      code var
+      | in the program, we have 
+      code F(var, cur)
+      | to be the value of 
+      code var
+      | after executing the function body.
+
+    br
+    p.color-lighter
+      |In this example we have
+      = render(partial: 'partials/twoCode')
+
+    p.color-lighter
+      |The two formula can be joined by adding a flag 
+      code
+        |beforeLoop
+      = render(partial: 'partials/combineCode')
+
+    p.color-lighter
+      |Transfer this into a z3 formula:
+      = render(partial: 'partials/z3')
+
+    br
+    p.color-lighter
+      |By observing the program we know that there is only one variable 
+      code max
+      |&nbsp;
+      | that’s related to the OutputCollector. 
+      |Note that beforeLoop can be arbitrary value in the first round of the function body, and is fixed to negative in the second round.
+    p.color-lighter
+      |To prove commutativity we use z3 to check whether there exists a solution for 
+      code F(F(max, cur1), cur2) !=  F(F(max, cur2), cur1)
+      |. 
+      br
+      |If we can find a solution, it means that there exists an order of input where the exchange of two elements 
+      |will result in different outputs. 
+      br
+      |On the contrary, if there exists no solution, the function 
+      code F(max, cur)
+      |&nbsp;
+      |is proved to be commutative.
+
+    p.color-lighter
+      |In this example, z3 returns unsat and proves the program to be commutative.
+
+
+    .ui.divider
+
+
+  .my-header
+    |People
+  .my-content
+    .my-sub-header
+      |Current
+    .ui.middle.aligned.divided.relaxed.list
+      - @current.each do |person|
+        .item
+          = image_tag "people/#{person.img_name}", class: "ui avatar image"
+          .content.color-lighter
+            - if person.url.length > 0 
+              = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
+            - else
+              |#{person.name}
+    br
+    .my-sub-header
+      |Former
+    .ui.middle.aligned.divided.relaxed.list
+      - @former.each do |person|
+        .item
+          = image_tag "people/#{person.img_name}", class: "ui avatar image"
+          .content.color-lighter
+            - if person.url.length > 0 
+              = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
+            - else
+              |#{person.name}
+            /.description.color-lighter
+              |#{person.description}
+
+  .my-content
+
+  .my-header
+    |Performance
+  .my-content
+    p.color-lighter
+      |In 
+      = link_to "Benchmarks", benchmarks_path
+      |&nbsp;
+      |we provided 98 reducer programs collected from Github. These programs do not contain complicate object structures and basically only cope with number.  For more details please refer to the 
+      = link_to "Benchmarks", benchmarks_path
+      |&nbsp;
+      |page.
+    p.color-lighter
+      |The next goal is to support string operations, object types, and inline function calls.
+    p.color-lighter
+      |We will also be migrating to
+      |&nbsp;
+      a href="https://flink.apache.org/"
+        |Apache Flink
+      |, for that it is more commonly used in industry nowadays.
+
+    .ui.divider
+
+  .my-header
+    |Contact
+  .my-content
+    .ui.middle.aligned.divided.relaxed.list
+      - @contact.each do |person|
+        .item
+          = image_tag "people/#{person.img_name}", class: "ui avatar image"
+          .content.color-lighter
+            = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
+            .description.color-lighter
+              |#{person.email}
+
+
+
+  .my-content
+  .my-content
+
+
+
+javascript:
+  SyntaxHighlighter.all()
+

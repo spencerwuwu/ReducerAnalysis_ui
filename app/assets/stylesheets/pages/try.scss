@@ -1,4 +1,22 @@
 @import "breakpoints";
+@import "color";
+
+#editor-wrapper {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
+  box-shadow: 5px 5px 3px rgba(10, 10, 10, 0.05);
+  border-radius: 10px;
+  background-color: $bg-white;
+}
+
+#editor-wrapper.hidden {
+  display: none;
+}
 
 #btn { 
   position: absolute;
@@ -23,9 +41,8 @@
 }
 
 #width-message {
-  position: fixed;
-  max-width: 400px;
-  width: 90%;
+  position: inline-block;
+  margin: 10px;
   z-index: 20;
 }
 
@@ -47,16 +64,15 @@
 }
 
 #type-menu {
-  position: fixed;
-  top: 125px;
-  right: 130px;
+  position: absolute;
+  top: 75px;
+  right: 150px;
   background-color: white;
-  z-index: 15;
+  z-index: 5;
   width: 260px;
   padding: 5px;
   box-shadow: 2px 2px 3px rgba(10, 10, 10, 0.1);
   border: 1px solid #ddd;
-  border-top: none;
   border-radius: 10px;
   transition: .5s;
 }
@@ -85,6 +101,23 @@
   display: none;
 }
 
+#editor-loading {
+  position: absolute;
+  top: 75px;
+  right: 0;
+  width: 100%;
+  bottom: 0;
+  z-index: 3;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transition: .5s;
+  display: none;
+}
+
+#editor-loading.show {
+  display: inline-block;
+}
+
 #editor { 
   font-size: 16px;
   position: absolute;
@@ -93,26 +126,36 @@
   right: 0;
   width: 100%;
   transition: .5s;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
-#showBtn {
-  position: fixed;
-  top: 150px;
+#showBtn, #benchmarkBtn{
+  position: absolute;
+  top: 125px;
   z-index: 9;
   right: -5px;
   transition: .5s;
   display: none;
+  background: white !important;
+  opacity: 0.9;
 }
-#showBtn.show {
+#showBtn.show, #benchmarkBtn.show {
   display: block;
 }
 
-#result {
-  position: fixed;
-  top: 125px;
-  bottom: 10%;
+#benchmarkBtn {
+  top: 75px;
+}
+
+
+
+#result, #benchmark {
+  position: absolute;
+  top: 75px;
+  bottom: 0px;
   width: 0%;
-  right: -40px;
+  right: -50px;
   background-color: #fff;
   box-shadow: -2px 2px 5px rgba(10, 10, 10, 0.2);
   border-top: 1px solid #ddd;
@@ -126,7 +169,11 @@
   display: flex;
 }
 
-#result.show {
+#benchmark {
+  z-index: 9;
+}
+
+#result.show, #benchmark.show{
   width: 50%;
   min-width: 400px;
   right: 0px;
@@ -142,4 +189,19 @@
   overflow-y: scroll;
   left: 50px;
   right: 20px;
+}
+
+#benchmark-content {
+  position: absolute;
+  display: inline-block;
+  top: 80px;
+  bottom: 20px;
+  overflow-y: scroll;
+  left: 30px;
+  right: 20px;
+  padding: 5px;
+}
+
+.editor-benchmark {
+  cursor: pointer;
 }

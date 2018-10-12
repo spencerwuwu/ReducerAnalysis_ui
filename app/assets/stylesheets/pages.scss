@@ -4,15 +4,16 @@
 
 @import "semantic-ui";
 @import "breakpoints";
+@import "color";
 
 body {
-  background-color: #FFFFFF;
+  background-color: $bg-white;
   font-family: "quicksandregular", sans-serif;
 }
 
 #mainMenu {
   padding-left: 50px;
-  background-color: #F7F7F7;
+  background-color: $menu-white;
   @media #{$small-device} {
     padding-left: 2%;
   }
@@ -30,19 +31,18 @@ body {
 }
 
 #body-container {
-  display: flex;
+  display: inline-block;
   position: absolute;
   top: 60px;
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  justify-content: center;
-  background-color: #fcfcfc;
+  background-color: $bg-white;
 }
 
 #content-container {
-  background-color: #fcfcfc;
+  background-color: $bg-white;
   width: 100%;
   padding: 30px 10%;
   display: inline-block;
@@ -95,7 +95,7 @@ code {
   margin: 0;
   font-size: 85%;
   font-weight: bolder;
-  background-color: rgba(27, 31, 35, 0.05);
+  background-color: $code-highlight;
   border-radius: 3px;
 }
 

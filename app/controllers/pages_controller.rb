@@ -1,13 +1,18 @@
 class PagesController < ApplicationController
-  before_action :task_params
+  #before_action :task_params
 
   def index
+    # for description
     @current = Person.where(:is_current => true)
     @former = Person.where(:is_current => false) 
     @contact = Person.where(:is_contact => true)
-  end
 
-  def try
+
+    # for editor benchmark list
+    @selfs = Testcase.where(:source => "Self")
+    @githubs = Testcase.where(:source => "Github")
+
+    # for editor
     if (params.has_key?(:id))
       @benchmark = Testcase.find(params[:id])
     else
@@ -36,6 +41,19 @@ class PagesController < ApplicationController
     end
   end
 
+  def load_benchmark
+    @benchmark = Testcase.find(params[:id])
+    @java = @benchmark.java.gsub "\n", "\\n"
+    #@java.gsub "\"\t", "\\t"
+    #@java.gsub "\"", "\\\""
+    #@java.gsub "\'", "\\\'"
+    #@benchmark.java = @java
+
+    respond_to do |format|
+        format.json { render json: @benchmark }
+    end
+  end
+
   def benchmarks
     @githubs = Testcase.where(:source => "Github")
 
@@ -52,7 +70,4 @@ class PagesController < ApplicationController
     end
   end
 
-  def task_params
-    #params.require(:testcase).permit(:java)
-  end
 end

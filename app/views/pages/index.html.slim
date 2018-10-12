@@ -1,197 +1,402 @@
-#content-container
-  = render(partial: "partials/scrollTop")
 
-  .my-header
-    |Description
-  .my-content
-    p.color-lighter
-      |J-ReCoVer, short for "Java Reducer Commutative Verifier", is a verification tool for
-      |&nbsp;
-      a href="https://en.wikipedia.org/wiki/MapReduce" MapReduce
-      |&nbsp;
-      |program written with 
-      a href="http://hadoop.apache.org/" Hadoop
-      |. A program is said to be 
-      a href="https://en.wikipedia.org/wiki/Commutative_property"
-        |commutative
-      |&nbsp;
-      |if the order of the inputs will not affect the outputs. 
-    p.color-lighter
-      |J-ReCoVer symbolic executes the function body of a reducer and tries to prove the commutativity. We use
-      |&nbsp;
-      a href="https://github.com/Sable/soot" soot
-      |&nbsp;
-      | to extract the reducer from executable byte-codes, and verify the result with
-      |&nbsp;
-      a href="https://github.com/Z3Prover/z3" z3
-      |.
-    p.color-lighter
-      |Currently J-ReCoVer supports only operations on numbers, and no loop or array is allowed except 
-      code
-        |while (iter.hasNext()) {}
-      |.
+#width-message.ui.warning.message
+  i.close.icon
+  .header
+    |Warning
+  |To see the editor, screen width should be at least 630px
 
-    .ui.divider
+#editor-wrapper
+  #panel
+    .ui.left.menu
+      .header.item.medium.text
+        |Templates: 
+      #ReducerOutputCollector.item onClick="setOutputCollector()"
+        |OutputCollector
+      #ReducerContext.item onClick="setContext()"
+        |Context
 
-  .my-header
-    |Our Approach
-  .my-content
-    p.color-lighter
-      |Our goal is to check whether the order of the value-set will affect the result OutputCollector/Context returns. 
+    .right.menu
+      button.ui.teal.basic.button#type-btn onClick="openType()"
+        i.chevron.down.icon
+        | Types  
+      button.ui.teal.button#run-btn onClick="executeTask()"
+        i.play.icon
+        | Run
 
-    p.color-lighter
-      |Below is a typical reducer program that returns the max value within the value-set. It is commutative.
-    = render(partial: 'partials/indexCode')
+  #type-menu.deactive
+    span#T1
+      |T1: 
+      select.ui.dropdown#T1-select name="t1"
+        option value="IntWritable"
+          |IntWritable
+        option value="LongWritable"
+          |LongWritable
+        option value="Text"
+          |Text
     br
-
-    p.color-lighter
-      |To verify the commutativity in a formal approach, we first split the reducer program into 3 sections: 
-    .ui.ordered.list.color-lighter style="padding-left: 10px;"
-      .item 
-        .header
-          |before-loop:
-        .description
-          |Set the initial value of several variables. A program might access its value-set here.
-      .item
-        .header
-          |inner-loop:
-        .description
-          |The program reads one element from its value-set and performs some functions within the loop.
-      .item 
-        .header
-          |after-loop:
-        .description
-          |This section does not take inputs from the value-set. It will not affect the commutativity of the program.
+    span#T2
+      |T2: 
+      select.ui.dropdown#T2-select name="t2"
+        option value="Integer"
+          |Integer
+        option value="IntWritable"
+          |IntWritable
+        option value="Long"
+          |Long
+        option value="LongWritable"
+          |LongWritable
+        option value="Double"
+          |Double
+        option value="DoubleWritable"
+          |DoubleWritable
     br
-    p.color-lighter
-      |Then we transform the function body of before-loop and inner-loop into SMT formulas. 
-      |We define each function body:
-    .ui.segment
-      |Let 
-      code cur
-      | be the input we get from the value-set in this function body. 
+    span#T3
+      |T3: 
+      select.ui.dropdown#T3-select name="t3"
+        option value="IntWritable"
+          |IntWritable
+        option value="LongWritable"
+          |LongWritable
+        option value="Text"
+          |Text
+    br
+    span#T4
+      |T4: 
+      select.ui.dropdown#T4-select name="t4"
+        option value="Integer"
+          |Integer
+        option value="IntWritable"
+          |IntWritable
+        option value="Long"
+          |Long
+        option value="LongWritable"
+          |LongWritable
+        option value="Double"
+          |Double
+        option value="DoubleWritable"
+          |DoubleWritable
+    br
+  #editor-loading
+    .ui.active.inverted.dimmer
+      .ui.text.loader
+        |Fetching the Benchmark 
+  #editor
+    .ui.positive.message
+      p
+        |Refresh if you can't see the editor
+
+  button.ui.basic.large.icon.button#showBtn onClick="resultShow();"
+    |Result     
+    i.angle.left.icon
+
+  button.ui.basic.large.icon.button#benchmarkBtn.show onClick="benchmarkShow();"
+    |Benchmarks 
+    i.angle.left.icon
+
+  #benchmark
+    .result-menu.ui.fluid.secondary.menu style="align-items: center;"
+      p.large.text
+        |Benchmarks:
+      .right.menu
+        button.ui.grey.basic.icon.button#hideBtn onClick="benchmarkHide();"
+          i.chevron.right.icon
+    #benchmark-content
+      .my-subheader
+        |Self Written
+      .ui.relaxed.animated.divided.list
+        - @selfs.each do |benchmark|
+          .item.editor-benchmark onClick="benchmarkLoad(#{benchmark.id});"
+            i.copy.outline.icon
+            |#{benchmark.name}
       br
-      |For each variable 
-      code var
-      | in the program, we have 
-      code F(var, cur)
-      | to be the value of 
-      code var
-      | after executing the function body.
+      .my-subheader
+        |Collected
+      .ui.relaxed.animated.divided.list
+        - @githubs.each do |benchmark|
+          .item.editor-benchmark onClick="benchmarkLoad(#{benchmark.id});"
+            i.copy.outline.icon
+            |#{benchmark.name}
 
-    br
-    p.color-lighter
-      |In this example we have
-      = render(partial: 'partials/twoCode')
-
-    p.color-lighter
-      |The two formula can be joined by adding a flag 
-      code
-        |beforeLoop
-      = render(partial: 'partials/combineCode')
-
-    p.color-lighter
-      |Transfer this into a z3 formula:
-      = render(partial: 'partials/z3')
-
-    br
-    p.color-lighter
-      |By observing the program we know that there is only one variable 
-      code max
-      |&nbsp;
-      | that’s related to the OutputCollector. 
-      |Note that beforeLoop can be arbitrary value in the first round of the function body, and is fixed to negative in the second round.
-    p.color-lighter
-      |To prove commutativity we use z3 to check whether there exists a solution for 
-      code F(F(max, cur1), cur2) !=  F(F(max, cur2), cur1)
-      |. 
-      br
-      |If we can find a solution, it means that there exists an order of input where the exchange of two elements 
-      |will result in different outputs. 
-      br
-      |On the contrary, if there exists no solution, the function 
-      code F(max, cur)
-      |&nbsp;
-      |is proved to be commutative.
-
-    p.color-lighter
-      |In this example, z3 returns unsat and proves the program to be commutative.
+  #result
+    .result-menu.ui.fluid.secondary.menu style="align-items: center;"
+      p.large.text
+        |Result:
+      .right.menu
+        button.ui.grey.basic.icon.button#hideBtn onClick="resultHide();"
+          i.chevron.right.icon
+    #result-content
+      .ui.active.inverted.dimmer
+        .ui.text.loader
+          |Fetching the Result
 
 
-    .ui.divider
-
-
-  .my-header
-    |People
-  .my-content
-    .my-sub-header
-      |Current
-    .ui.middle.aligned.divided.relaxed.list
-      - @current.each do |person|
-        .item
-          = image_tag "people/#{person.img_name}", class: "ui avatar image"
-          .content.color-lighter
-            - if person.url.length > 0 
-              = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
-            - else
-              |#{person.name}
-    br
-    .my-sub-header
-      |Former
-    .ui.middle.aligned.divided.relaxed.list
-      - @former.each do |person|
-        .item
-          = image_tag "people/#{person.img_name}", class: "ui avatar image"
-          .content.color-lighter
-            - if person.url.length > 0 
-              = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
-            - else
-              |#{person.name}
-            /.description.color-lighter
-              |#{person.description}
-
-  .my-content
-
-  .my-header
-    |Performance
-  .my-content
-    p.color-lighter
-      |In 
-      = link_to "Benchmarks", benchmarks_path
-      |&nbsp;
-      |we provided 98 reducer programs collected from Github. These programs do not contain complicate object structures and basically only cope with number.  For more details please refer to the 
-      = link_to "Benchmarks", benchmarks_path
-      |&nbsp;
-      |page.
-    p.color-lighter
-      |The next goal is to support string operations, object types, and inline function calls.
-    p.color-lighter
-      |We will also be migrating to
-      |&nbsp;
-      a href="https://flink.apache.org/"
-        |Apache Flink
-      |, for that it is more commonly used in industry nowadays.
-
-    .ui.divider
-
-  .my-header
-    |Contact
-  .my-content
-    .ui.middle.aligned.divided.relaxed.list
-      - @contact.each do |person|
-        .item
-          = image_tag "people/#{person.img_name}", class: "ui avatar image"
-          .content.color-lighter
-            = link_to "#{person.name}", "#{person.url}", class: "headder", target: :_blank
-            .description.color-lighter
-              |#{person.email}
-
-
-
-  .my-content
-  .my-content
-
-
+= render(partial: "partials/index")
 
 javascript:
-  SyntaxHighlighter.all()
+  function show_size_message() {
+    var width = $(window).width();
+    if (width < 630) {
+      if ($("#width-message").hasClass("hidden")) {
+        $("#width-message").removeClass("hidden");
+      }
+      $("#editor-wrapper").addClass("hidden");
+    } else {
+      if (!$("#width-message").hasClass("hidden")) {
+        $("#width-message").addClass("hidden");
+      }
+      $("#editor-wrapper").removeClass("hidden");
+    }
+  }
+
+  function set_wrapper_size() {
+    $("#editor-wrapper").height($(window).height() - $("#mainMenu").height() - 60);
+    $("#editor-wrapper").width($(window).width() - 10);
+  }
+
+  $(document).ready(function() {
+    $('.ui.dropdown').dropdown();
+    show_size_message();
+    set_wrapper_size();
+  });
+
+  $(window).resize(function(){
+    show_size_message();
+    set_wrapper_size();
+  });
+
+  $(".message .close")
+    .on('click', function() {
+      $(this)
+        .closest('.message')
+        .transition('fade')
+      ;
+    })
+  ;
+
+
+= javascript_include_tag "/ace-builds/src-min-noconflict/ace.js"
+javascript:
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/chrome");
+  editor.session.setMode("ace/mode/java");
+  var hasResult = false;
+
+  var mode = 2;
+  var reducer_type = "Collector";
+
+  var Context_c = "//\n// Complete the template\n// Remember to set T1 and T2 in 'Types' before clicking 'Run'\n//\n\n";
+  var OutputCollector_c = "//\n// Complete the template\n// Remember to set T1-T4 in 'Types' before clicking 'Run'\n//\n\n";
+  var Context_t = "public void reduce(T1 key, Iterable<T2> values,\n\tContext context) throws IOException,InterruptedException {\n\n}";
+  var OutputCollector_t = "public void reduce(T1 key, Iterator<T2> values,\n\tOutputCollector<T3,T4> oc1, Reporter reporter) throws IOException,InterruptedException {\n\n}";
+
+  String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+  };
+
+
+  function format(target) {
+    return target.replace(/\n/g, "</br>").replace(/\t/g, "&#8195;").replace(" ", "&#032;");
+  }
+
+  function r_format(target) {
+    return target.replaceAll("&amp;", "&").replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
+  }
+
+  function benchmarkShow() {
+      $("#benchmark").addClass("show");
+      $("#benchmarkBtn").removeClass("show");
+  }
+
+  function benchmarkHide() {
+    if ($("#benchmark").hasClass("show")) {
+        $("#benchmark").removeClass("show");
+        $("#benchmarkBtn").addClass("show");
+    }
+  }
+
+  function resultHide() {
+    $("#result").removeClass("show");
+    if (hasResult) {
+      $("#showBtn").addClass("show");
+    }
+  }
+
+  function resultShow() {
+    if (hasResult) {
+        $("#result").addClass("show");
+        $("#showBtn").removeClass("show");
+      }
+  }
+
+  function openType() {
+    if ($("#type-menu").hasClass("deactive")) {
+      $("#type-menu").removeClass("deactive");
+      $("#type-menu").addClass("active");
+      $("#type-btn").addClass("active");
+      $("#type-btn").removeClass("teal");
+    } else {
+      $("#type-menu").removeClass("active");
+      $("#type-menu").addClass("deactive");
+      $("#type-btn").removeClass("active");
+      $("#type-btn").addClass("teal");
+    }
+  }
+
+  function disableRun() {
+    $("#run-btn").addClass("disabled");
+    $("#hideBtn").addClass("hide");
+    if (!$("#type-menu").hasClass("deactive")) {
+      $("#type-menu").removeClass("active");
+      $("#type-menu").addClass("deactive");
+      $("#type-btn").removeClass("active");
+      $("#type-btn").addClass("teal");
+    }
+  }
+
+  function enableRun() {
+    $("#run-btn").removeClass("disabled");
+    $("#hideBtn").removeClass("hide");
+  }
+
+  function setContext() {
+    $("#ReducerContext").addClass("active");
+    $("#ReducerOutputCollector").removeClass("active");
+    if (mode != 1) {
+      editor.setValue(Context_c + Context_t);
+      mode = 1;
+      reducer_type = "Context";
+    }
+    resultHide();
+  }
+
+  function setOutputCollector() {
+    $("#ReducerContext").removeClass("active");
+    $("#ReducerOutputCollector").addClass("active");
+    if (mode != 2) {
+      editor.setValue(OutputCollector_c + OutputCollector_t);
+      mode = 2;
+      reducer_type = "Collector";
+    }
+    resultHide();
+  }
+
+  function setInitial() {
+    $("#ReducerContext").removeClass("active");
+    $("#ReducerOutputCollector").removeClass("active");
+    if (mode != 3) {
+      editor.setValue(r_format("#{@java}"));
+      $("#T1-select").val("#{@benchmark.t1}");
+      $("#T2-select").val("#{@benchmark.t2}");
+      $("#T3-select").val("#{@benchmark.t3}");
+      $("#T4-select").val("#{@benchmark.t4}");
+      if ("#{@benchmark.r_type}" == "Context") {
+        reducer_type = "Context";
+      } else {
+        reducer_type = "Collector";
+      }
+      mode = 3;
+    }
+    resultHide();
+  }
+
+  function benchmarkLoad(bid) {
+    benchmarkHide();
+    $("#editor-loading").addClass("show");
+    $.ajax({
+    type: 'POST',
+    url: "#{load_benchmark_path}",
+    data: { 
+      id: bid, 
+      authenticity_token: "#{form_authenticity_token}"
+    },
+    dataType: 'json',
+    success: function (data) {
+        editor.setValue(r_format(data.java));
+        $("#editor-loading").removeClass("show");
+        hasResult = false;
+        $("#showBtn").removeClass("show");
+        $("#T1-select").val(data.t1);
+        $("#T2-select").val(data.t2);
+        $("#T3-select").val(data.t3);
+        $("#T4-select").val(data.t4);
+        if (data.r_type == "Context") {
+          reducer_type = "Context";
+        } else {
+          reducer_type = "Collector";
+        }
+        mode = 3;
+      },
+      error: function() {
+        editor.setValue("// Failed loading\n");
+        $("#editor-loading").removeClass("show");
+        hasResult = false;
+        $("#showBtn").removeClass("show");
+      }
+    });
+  }
+
+  function executeTask() {
+    if ($("#run-btn").hasClass("disabled")) return;
+
+    resultHide();
+    disableRun();
+    $("#result").addClass("show");
+    benchmarkHide();
+    hasResult = true;
+    $("#result-content").html("<div class='ui active inverted dimmer'><div class='ui text loader'>Fetching the Result</div></div>");
+    if ($("#T3-select").val() == null || $("#T3-select").val() == "") $("#T3-select").val($("#T1-select").val());
+    if ($("#T4-select").val() == null || $("#T4-select").val() == "") $("#T4-select").val($("#T2-select").val());
+    $.ajax({
+    type: 'POST',
+    url: "#{create_task_path}",
+    data: { 
+      java: editor.getValue(), 
+      t1: $("#T1-select").val(),
+      t2: $("#T2-select").val(),
+      t3: $("#T3-select").val(),
+      t4: $("#T4-select").val(),
+      r_type: reducer_type,
+      authenticity_token: "#{form_authenticity_token}"
+    },
+    dataType: 'json',
+    success: function (data) {
+        enableRun();
+        if (data.result.includes("Compile Error")) {
+          $("#result-content").html("<table class='ui red table' id='compile-table'><thead><tr><th>Compile Error</th></tr></thead></table>");
+          $("#compile-table").append("<tbody><tr><td>Also check if the types are set correctly</td></tr></tbody></table>");
+          $("#compile-table").append("<tbody><tr><td>" + format(filterXSS(data.result)) + "</td></tr></tbody></table>");
+          $("#type-btn").removeClass("teal");
+          $("#type-btn").addClass("red");
+          setTimeout(function() {
+            $("#type-btn").removeClass("red");
+            $("#type-btn").addClass("teal");
+            },700);
+          return;
+        } else if (data.result.includes("Type Error")) {
+          $("#result-content").html("<table class='ui red table' id='compile-table'><thead><tr><th>Type Error</th></tr></thead></table>");
+          $("#compile-table").append("<tbody><tr><td>Check if the types are set correctly</td></tr></tbody></table>");
+          $("#compile-table").append("<tbody><tr><td>" + format(filterXSS(data.result)) + "</td></tr></tbody></table>");
+          $("#type-btn").removeClass("teal");
+          $("#type-btn").addClass("red");
+          setTimeout(function() {
+            $("#type-btn").removeClass("red");
+            $("#type-btn").addClass("teal");
+            },700);
+          return;
+        }
+        $("#result-content").html("<table class='ui teal table' id='execute-table'><thead><tr><th>Result</th></tr></thead></table>");
+        $("#execute-table").append("<tbody><tr><td>" + format(filterXSS(data.result)) + "</td></tr></tbody>");
+
+        enableRun();
+      },
+      error: function() {
+        $('#result-content').html("Internal Error");
+        enableRun();
+      }
+    });
+
+  }
+  setInitial();
+
+

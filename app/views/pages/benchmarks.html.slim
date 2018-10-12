@@ -45,12 +45,11 @@
           th
             |Result
           th
-            |Comment
       tbody
         - @selfs.each do |benchmark|
           tr
             td.collapsing
-              = link_to try_path(benchmark.id), target: :_blank do
+              = link_to try_path(benchmark.id) do
                 i.file.outline.icon
                 |#{benchmark.name}
             - if benchmark.result.include? "Cannot find"
@@ -61,13 +60,15 @@
               td.positive
                 |#{benchmark.result}
             td.collapsing.right.aligned
-                |#{benchmark.comment}
+              = link_to try_path(benchmark.id) do
+                button.ui.basic.teal.button
+                  |Try it
 
   .my-content
 
   .my-content
     .my-subheader
-      |Grep from github
+      |Collected
     p.color-lighter.tab
       |Total: #{@githubs.count}, 
       br
@@ -89,7 +90,7 @@
         - @githubs.each do |benchmark|
           tr
             td.collapsing
-              = link_to try_path(benchmark.id), target: :_blank do
+              = link_to try_path(benchmark.id) do
                 i.file.outline.icon
                 |#{benchmark.name}
             - if benchmark.result.include? "Cannot find"
@@ -100,7 +101,9 @@
               td.positive
                 |#{benchmark.result}
             td.collapsing.right.aligned
-                |#{benchmark.comment}
+              = link_to try_path(benchmark.id) do
+                button.ui.basic.teal.button
+                  |Try it
 
 
   .my-content
