@@ -32,11 +32,11 @@
     p.color-lighter.tab
       |Total: #{@selfs.count}, 
       br
-      |Proved to be commutative: 3
+      |Commutative: #{@selfs.where(:result_type => 1).count}
       br
-      |Cannot prove but found counterexample: 3
+      |Not commutative: #{@selfs.where(:result_type => 2).count}
       br
-      |Cannot determine: 0
+      |Cannot determine: #{@selfs.where(:result_type => 3).count} 
     table.ui.celled.unstackable.striped.table
       thead.color-lighter
         tr
@@ -54,7 +54,7 @@
                 |#{benchmark.name}
             - if benchmark.result.include? "Cannot find"
               td.error
-                i.attention.icon
+                /i.attention.icon
                 |#{benchmark.result}
             - else
               td.positive
@@ -70,13 +70,13 @@
     .my-subheader
       |Collected
     p.color-lighter.tab
-      |Total: #{@githubs.count}, 
+      |Total: #{@b2017.count}, 
       br
-      |Proved to be commutative: 94
+      |Commutative: #{@b2017.where(:result_type => 1).count}
       br
-      |Cannot prove but found counterexample: 3
+      |Not commutative: #{@b2017.where(:result_type => 2).count}
       br
-      |Cannot determine: 1
+      |Cannot determine: #{@b2017.where(:result_type => 3).count} 
     table.ui.celled.unstackable.striped.table
       thead.color-lighter
         tr
@@ -87,7 +87,7 @@
           th
             |Comment
       tbody
-        - @githubs.each do |benchmark|
+        - @b2017.each do |benchmark|
           tr
             td.collapsing
               = link_to try_path(benchmark.id) do
@@ -95,7 +95,7 @@
                 |#{benchmark.name}
             - if benchmark.result.include? "Cannot find"
               td.error
-                i.attention.icon
+                /i.attention.icon
                 |#{benchmark.result}
             - else
               td.positive

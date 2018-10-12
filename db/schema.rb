@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_09_050726) do
+ActiveRecord::Schema.define(version: 2018_10_12_084315) do
 
   create_table "people", force: :cascade do |t|
     t.string "name"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 2018_10_09_050726) do
     t.text "name"
     t.string "comment"
     t.string "source"
+    t.integer "result_type"
   end
 
 end

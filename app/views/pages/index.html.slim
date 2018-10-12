@@ -85,12 +85,12 @@
       p
         |Refresh if you can't see the editor
 
-  button.ui.basic.large.icon.button#showBtn onClick="resultShow();"
-    |Result     
+  button.ui.basic.large.icon.button#benchmarkBtn.show onClick="benchmarkShow();"
+    |Benchmark List
     i.angle.left.icon
 
-  button.ui.basic.large.icon.button#benchmarkBtn.show onClick="benchmarkShow();"
-    |Benchmarks 
+  button.ui.basic.large.icon.button#showBtn onClick="resultShow();"
+    |Result     
     i.angle.left.icon
 
   #benchmark
@@ -112,7 +112,7 @@
       .my-subheader
         |Collected
       .ui.relaxed.animated.divided.list
-        - @githubs.each do |benchmark|
+        - @b2017.each do |benchmark|
           .item.editor-benchmark onClick="benchmarkLoad(#{benchmark.id});"
             i.copy.outline.icon
             |#{benchmark.name}
@@ -149,7 +149,7 @@ javascript:
   }
 
   function set_wrapper_size() {
-    $("#editor-wrapper").height($(window).height() - $("#mainMenu").height() - 60);
+    $("#editor-wrapper").height($(window).height() - $("#mainMenu").height() - 160);
     $("#editor-wrapper").width($(window).width() - 10);
   }
 
@@ -391,7 +391,7 @@ javascript:
         enableRun();
       },
       error: function() {
-        $('#result-content').html("Internal Error");
+        $('#result-content').html("Network Error");
         enableRun();
       }
     });
