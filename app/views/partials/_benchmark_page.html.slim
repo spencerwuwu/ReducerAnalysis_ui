@@ -1,0 +1,43 @@
+.my-subheader
+  |#{title}
+p.color-lighter.tab
+  |Total: #{benchmarks.count}, 
+  br
+  |Commutative: #{benchmarks.where(:result_type => 1).count}
+  br
+  |Not commutative: #{benchmarks.where(:result_type => 2).count}
+  br
+  |Cannot determine: #{benchmarks.where(:result_type => 3).count} 
+table.ui.celled.unstackable.striped.table
+  thead.color-lighter
+    tr
+      th
+        |File 
+      th
+        |Result
+      th
+  tbody
+    - benchmarks.each do |benchmark|
+      tr
+        td.collapsing
+          = link_to try_path(benchmark.id) do
+            i.file.outline.icon
+            |#{benchmark.name}
+        - if benchmark.result_type == 3
+          td.error
+            /i.attention.icon
+            |#{benchmark.result}
+        - if benchmark.result_type == 4
+          td.error
+            /i.attention.icon
+            |#{benchmark.result}
+        - if benchmark.result_type == 2
+          td.positive
+            |#{benchmark.result}
+        - if benchmark.result_type == 1
+          td.positive
+            |#{benchmark.result}
+        td.collapsing.right.aligned
+          = link_to try_path(benchmark.id) do
+            button.ui.basic.teal.button
+              |Try it

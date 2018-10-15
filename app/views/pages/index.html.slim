@@ -31,6 +31,8 @@
           |IntWritable
         option value="LongWritable"
           |LongWritable
+        option value="BooleanWritable"
+          |BooleanWritable
         option value="Text"
           |Text
     br
@@ -57,6 +59,8 @@
           |IntWritable
         option value="LongWritable"
           |LongWritable
+        option value="BooleanWritable"
+          |BooleanWritable
         option value="Text"
           |Text
     br
@@ -75,6 +79,8 @@
           |Double
         option value="DoubleWritable"
           |DoubleWritable
+        option value="Text"
+          |Text
     br
   #editor-loading
     .ui.active.inverted.dimmer
@@ -101,21 +107,10 @@
         button.ui.grey.basic.icon.button#hideBtn onClick="benchmarkHide();"
           i.chevron.right.icon
     #benchmark-content
-      .my-subheader
-        |Self Written
-      .ui.relaxed.animated.divided.list
-        - @selfs.each do |benchmark|
-          .item.editor-benchmark onClick="benchmarkLoad(#{benchmark.id});"
-            i.copy.outline.icon
-            |#{benchmark.name}
-      br
-      .my-subheader
-        |Collected
-      .ui.relaxed.animated.divided.list
-        - @b2017.each do |benchmark|
-          .item.editor-benchmark onClick="benchmarkLoad(#{benchmark.id});"
-            i.copy.outline.icon
-            |#{benchmark.name}
+      = render(partial: "partials/benchmark_list", locals: {title: "Self Written", benchmarks: @selfs})
+      = render(partial: "partials/benchmark_list", locals: {title: "Collected-2018", benchmarks: @b2018})
+      = render(partial: "partials/benchmark_list", locals: {title: "Collected-2017", benchmarks: @b2017})
+
 
   #result
     .result-menu.ui.fluid.secondary.menu style="align-items: center;"

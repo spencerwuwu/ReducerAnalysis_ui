@@ -1,0 +1,9 @@
+.my-subheader
+  |#{title}
+.ui.relaxed.animated.divided.list
+  - benchmarks.each do |benchmark|
+    .item.editor-benchmark onClick="benchmarkLoad(#{benchmark.id});"
+      i.copy.outline.icon
+      |#{benchmark.name}
+br
+
