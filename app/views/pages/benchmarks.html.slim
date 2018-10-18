@@ -53,12 +53,12 @@
   .my-content#Self-Written
     = render(partial: 'partials/benchmark_page', locals: {title: "Self Written", benchmarks: @selfs})
 
-  .my-content#Collected-2018
   .my-content
+  .my-content#Collected-2018
     = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2018", benchmarks: @b2018})
 
-  .my-content#Collected-2017
   .my-content
+  .my-content#Collected-2017
     = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2017", benchmarks: @b2017})
 
   .my-content
@@ -80,7 +80,7 @@ javascript:
       e.preventDefault();
 
       // top position relative to the document
-      var pos = $id.offset().top - 30;
+      var pos = $id.offset().top - 90;
 
       // animated top scrolling
       $('body, html').animate({scrollTop: pos});
