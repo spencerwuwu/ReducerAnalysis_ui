@@ -9,35 +9,79 @@
       .item
         i.folder.icon
         .content
-          a.header href="/downloads/runnable_number.tar.gz"
-            |runnable_number.tar.gz
+          a.header href="/downloads/searchcode2018.tar.gz"
+            |searchcode2018.tar.gz
+          .description
+            |collected in 2018
+      .item
+        i.folder.icon
+        .content
+          a.header href="/downloads/searchcode2018.zip"
+            |searchcode2018.zip
+          .description
+            |collected in 2018
+      .item
+        i.folder.icon
+        .content
+          a.header href="/downloads/searchcode2017.tar.gz"
+            |searchcode2017.tar.gz
           .description
             |collected in 2017
       .item
         i.folder.icon
         .content
-          a.header href="/downloads/runnable_number.zip"
-            |runnable_number.zip
+          a.header href="/downloads/searchcode2017.zip"
+            |searchcode2017.zip
           .description
             |collected in 2017
 
 
-
   .my-header
     |Experiments
-
   .my-content
+    .ui.link.list
+      a.item href="#Self-Written"
+        i.hand.point.down.outline.icon
+        |Self-Written
+      a.item href="#Collected-2018"
+        i.hand.point.down.outline.icon
+        |Collected-2018
+      a.item href="#Collected-2017"
+        i.hand.point.down.outline.icon
+        |Collected-2017
+
+  .my-content#Self-Written
     = render(partial: 'partials/benchmark_page', locals: {title: "Self Written", benchmarks: @selfs})
 
-  .my-content
+  .my-content#Collected-2018
   .my-content
     = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2018", benchmarks: @b2018})
 
-  .my-content
+  .my-content#Collected-2017
   .my-content
     = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2017", benchmarks: @b2017})
 
+  .my-content
+  .my-content
+  .my-content
 
-  .my-content
-  .my-content
-  .my-content
+javascript:
+  $(document).on('click', 'a[href^="#"]', function(e) {
+      // target element id
+      var id = $(this).attr('href');
+
+      // target element
+      var $id = $(id);
+      if ($id.length === 0) {
+          return;
+      }
+
+      // prevent standard hash navigation (avoid blinking in IE)
+      e.preventDefault();
+
+      // top position relative to the document
+      var pos = $id.offset().top - 30;
+
+      // animated top scrolling
+      $('body, html').animate({scrollTop: pos});
+  });
