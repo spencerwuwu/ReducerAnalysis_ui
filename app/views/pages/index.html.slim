@@ -145,7 +145,7 @@
     #benchmark-content
       = render(partial: "partials/benchmark_list", locals: {title: "Self Written", benchmarks: @selfs})
       = render(partial: "partials/benchmark_list", locals: {title: "Collected-2018", benchmarks: @b2018})
-      = render(partial: "partials/benchmark_list", locals: {title: "Collected-2017", benchmarks: @b2017})
+      /= render(partial: "partials/benchmark_list", locals: {title: "Collected-2017", benchmarks: @b2017})
 
 
   #result

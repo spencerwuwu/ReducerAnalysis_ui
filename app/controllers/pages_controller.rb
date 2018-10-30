@@ -11,7 +11,7 @@ class PagesController < ApplicationController
     # for editor benchmark list
     @selfs = Testcase.where(:source => "Self")
     @b2018 = Testcase.where(:source => "2018")
-    @b2017 = Testcase.where(:source => "2017")
+    #@b2017 = Testcase.where(:source => "2017")
 
     # for editor
     if (params.has_key?(:id))
@@ -58,7 +58,7 @@ class PagesController < ApplicationController
   def benchmarks
     @selfs = Testcase.where(:source => "Self")
     @b2018 = Testcase.where(:source => "2018")
-    @b2017 = Testcase.where(:source => "2017")
+    #@b2017 = Testcase.where(:source => "2017")
   end
 
   def get_print

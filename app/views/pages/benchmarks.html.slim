@@ -20,20 +20,6 @@
             |searchcode2018.zip
           .description
             |collected in 2018
-      .item
-        i.folder.icon
-        .content
-          a.header href="/downloads/searchcode2017.tar.gz"
-            |searchcode2017.tar.gz
-          .description
-            |collected in 2017
-      .item
-        i.folder.icon
-        .content
-          a.header href="/downloads/searchcode2017.zip"
-            |searchcode2017.zip
-          .description
-            |collected in 2017
 
 
   .my-header
@@ -46,7 +32,7 @@
       a.item href="#Collected-2018"
         i.hand.point.down.outline.icon
         |Collected-2018
-      a.item href="#Collected-2017"
+      /a.item href="#Collected-2017"
         i.hand.point.down.outline.icon
         |Collected-2017
 
@@ -57,8 +43,8 @@
   .my-content#Collected-2018
     = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2018", benchmarks: @b2018})
 
-  .my-content
-  .my-content#Collected-2017
+  /.my-content
+  /.my-content#Collected-2017
     = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2017", benchmarks: @b2017})
 
   .my-content
