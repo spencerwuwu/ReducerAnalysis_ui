@@ -9,6 +9,7 @@ class PagesController < ApplicationController
 
 
     # for editor benchmark list
+    @liter = Testcase.where(:source => "Literacture")
     @selfs = Testcase.where(:source => "Self")
     @b2018 = Testcase.where(:source => "2018")
     #@b2017 = Testcase.where(:source => "2017")
@@ -56,6 +57,7 @@ class PagesController < ApplicationController
   end
 
   def benchmarks
+    @liter = Testcase.where(:source => "Literacture")
     @selfs = Testcase.where(:source => "Self")
     @b2018 = Testcase.where(:source => "2018")
     #@b2017 = Testcase.where(:source => "2017")
