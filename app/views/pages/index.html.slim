@@ -9,7 +9,7 @@
   #panel
     .ui.left.menu
       .header.item.medium.text
-        |Templates: 
+        |Empty template: 
       #ReducerOutputCollector.item onClick="setOutputCollector()"
         |OutputCollector
       #ReducerContext.item onClick="setContext()"
@@ -216,8 +216,8 @@ javascript:
   var mode = 2;
   var reducer_type = "Collector";
 
-  var Context_c = "//\n// Complete the template\n// Remember to set T1 and T2 in 'Types' before clicking 'Run'\n//\n\n";
-  var OutputCollector_c = "//\n// Complete the template\n// Remember to set T1-T4 in 'Types' before clicking 'Run'\n//\n\n";
+  var Context_c = "//\n// Write your own code here\n// Remember to set T1 and T2 in 'Types' before clicking 'Run'\n//\n\n";
+  var OutputCollector_c = "//\n// Write your own code here\n// Remember to set T1-T4 in 'Types' before clicking 'Run'\n//\n\n";
   var Context_t = "public void reduce(T1 key, Iterable<T2> values,\n\tContext context) throws IOException,InterruptedException {\n\n}";
   var OutputCollector_t = "public void reduce(T1 key, Iterator<T2> values,\n\tOutputCollector<T3,T4> oc1, Reporter reporter) throws IOException,InterruptedException {\n\n}";
 
@@ -332,6 +332,11 @@ javascript:
     resultHide();
   }
 
+  function setSelect(target, value) {
+    $(target).val(value);
+    $(target).dropdown("set selected", value);
+  }
+
   function benchmarkLoad(bid) {
     benchmarkHide();
     $("#editor-loading").addClass("show");
@@ -348,10 +353,10 @@ javascript:
         $("#editor-loading").removeClass("show");
         hasResult = false;
         $("#showBtn").removeClass("show");
-        $("#T1-select").val(data.t1);
-        $("#T2-select").val(data.t2);
-        $("#T3-select").val(data.t3);
-        $("#T4-select").val(data.t4);
+        setSelect("#T1-select", data.t1);
+        setSelect("#T2-select", data.t2);
+        setSelect("#T3-select", data.t3);
+        setSelect("#T4-select", data.t4);
         if (data.r_type == "Context") {
           reducer_type = "Context";
         } else {
