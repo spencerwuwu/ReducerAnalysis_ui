@@ -26,28 +26,28 @@
     |Experiments
   .my-content
     .ui.link.list
+      a.item href="#Collected-2018"
+        i.hand.point.down.outline.icon
+        |Collected-2018
       a.item href="#Literacture"
         i.hand.point.down.outline.icon
         |Literacture
       a.item href="#Self-Written"
         i.hand.point.down.outline.icon
         |Self-Written
-      a.item href="#Collected-2018"
-        i.hand.point.down.outline.icon
-        |Collected-2018
       /a.item href="#Collected-2017"
         i.hand.point.down.outline.icon
         |Collected-2017
+
+  .my-content
+  .my-content#Collected-2018
+    = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2018", benchmarks: @b2018})
 
   .my-content#Literacture
     = render(partial: 'partials/benchmark_page', locals: {title: "Literacture", benchmarks: @liter})
 
   .my-content#Self-Written
     = render(partial: 'partials/benchmark_page', locals: {title: "Self Written", benchmarks: @selfs})
-
-  .my-content
-  .my-content#Collected-2018
-    = render(partial: 'partials/benchmark_page', locals: {title: "Collected-2018", benchmarks: @b2018})
 
   .my-content
   .my-content

@@ -5,45 +5,43 @@
     |Description
   .my-content
     p.color-lighter
-      |J-ReCoVer, short for "Java Reducer Commutative Verifier", is a verification tool for
+      |J-ReCoVer, short for "Java Reducer Commutative Verifier", is a verification tool for the commutativity property of
+      |&nbsp;
+      a href="http://hadoop.apache.org/" Hadoop
       |&nbsp;
       a href="https://en.wikipedia.org/wiki/MapReduce" MapReduce
       |&nbsp;
-      |program written with 
-      a href="http://hadoop.apache.org/" Hadoop
-      |. A program is said to be 
+      |programs. A program is said to be 
       a href="https://en.wikipedia.org/wiki/Commutative_property"
         |commutative
       |&nbsp;
       |if the order of the inputs will not affect the outputs. 
     p.color-lighter
-      |J-ReCoVer symbolic executes the function body of a reducer and tries to prove the commutativity. We use
+      |J-ReCoVer symbolically executes the function body of a reducer and tries to prove the commutativity. We use
       |&nbsp;
       a href="https://github.com/Sable/soot" soot
       |&nbsp;
-      | to extract the reducer from executable byte-codes, and verify the result with
+      | to extract the reducer from executable bytecodes, and verify the result with
       |&nbsp;
       a href="https://github.com/Z3Prover/z3" z3
       |.
     p.color-lighter
-      |Currently J-ReCoVer supports only operations on numbers, and no loop or array is allowed except 
+      |Currently J-ReCoVer supports only operations on numerals, and no loop or array is allowed except 
       code
         |while (iter.hasNext()) {}
       |.
 
     .ui.divider
 
-  .my-header
+  /.my-header
     |Our Approach
-  .my-content
+  /.my-content
     p.color-lighter
       |Our goal is to check whether the order of the value-set will affect the result OutputCollector/Context returns. 
-
     p.color-lighter
       |Below is a typical reducer program that returns the max value within the value-set. It is commutative.
     = render(partial: 'partials/indexCode')
     br
-
     p.color-lighter
       |To verify the commutativity in a formal approach, we first split the reducer program into 3 sections: 
     .ui.ordered.list.color-lighter style="padding-left: 10px;"
@@ -78,22 +76,18 @@
       | to be the value of 
       code var
       | after executing the function body.
-
     br
     p.color-lighter
       |In this example we have
       = render(partial: 'partials/twoCode')
-
     p.color-lighter
       |The two formula can be joined by adding a flag 
       code
         |beforeLoop
       = render(partial: 'partials/combineCode')
-
     p.color-lighter
       |Transfer this into a z3 formula:
       = render(partial: 'partials/z3')
-
     br
     p.color-lighter
       |By observing the program we know that there is only one variable 
@@ -113,7 +107,6 @@
       code F(max, cur)
       |&nbsp;
       |is proved to be commutative.
-
     p.color-lighter
       |In this example, z3 returns unsat and proves the program to be commutative.
 
@@ -152,9 +145,9 @@
 
   .my-content
 
-  .my-header
+  /.my-header
     |Performance
-  .my-content
+  /.my-content
     p.color-lighter
       |In 
       = link_to "Benchmarks", benchmarks_path
@@ -174,9 +167,9 @@
 
     .ui.divider
 
-  .my-header
+  /.my-header
     |Contact
-  .my-content
+  /.my-content
     .ui.middle.aligned.divided.relaxed.list
       - @contact.each do |person|
         .item
